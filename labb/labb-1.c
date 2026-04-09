@@ -5,11 +5,13 @@
 void read_string(char* buffer, size_t bufferSize) {
 
 }
+
 int read_int() {
-    int number;¨
+    int number;
 
     return number;
 }
+
 void send_int(int number) {
 
 }
