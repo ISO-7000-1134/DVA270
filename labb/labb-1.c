@@ -39,7 +39,10 @@ int read_int() {
 }
 
 void send_int(int number) {
-
+    char stringOfNum[NUMBER_STRING_BUFFER_SIZE];
+    
+    stringOfNum = sprintf("%i", number);
+    uarte_write(stringOfNum, sizeof(stringOfNum));
 }
 
 // Exorcise 2
