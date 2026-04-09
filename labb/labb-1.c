@@ -10,7 +10,7 @@ char getchar() {
     return *c;
 }
 #define RETURN_CHAR '\r'
-void read_string(char* buffer, size_t bufferSize) {{
+void read_string(char* buffer, size_t bufferSize) {
     int i;
     buffer[0] = getchar();
     // Read characters until the output buffer is full or a the return character character is given
@@ -24,8 +24,6 @@ void read_string(char* buffer, size_t bufferSize) {{
 
     // Terminate the string
     buffer[i - 1] = '\0';
-}
-
 }
 
 int read_int() {
