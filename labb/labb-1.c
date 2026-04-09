@@ -26,10 +26,13 @@ void read_string(char* buffer, size_t bufferSize) {
     buffer[i - 1] = '\0';
 }
 
+#define NUMBER_STRING_BUFFER_SIZE 32
 int read_int() {
-    int number;
+    char stringOfNum[NUMBER_STRING_BUFFER_SIZE];
 
-    return number;
+    read_string(stringOfNum, NUMBER_STRING_BUFFER_SIZE);
+
+    return atoi(stringOfNum);
 }
 
 void send_int(int number) {
