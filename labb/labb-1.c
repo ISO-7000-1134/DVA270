@@ -10,6 +10,7 @@ char getchar() {
     return *c;
 }
 #define RETURN_CHAR '\r'
+#define BUFFER_OVERFLOW_ERROR_MESSAGE " (inputed string was longer that the buffer size)"
 void read_string(char* buffer, size_t bufferSize) {
     int i;
     buffer[0] = getchar();
@@ -19,8 +20,10 @@ void read_string(char* buffer, size_t bufferSize) {
 
     // If the output buffer was filled and the last character was not the return character,
     // then let the user enter characthers untill a return character
-    if (i == bufferSize && output[i - 1] != RETURN_CHAR)
+    if (i == bufferSize && output[i - 1] != RETURN_CHAR) {
         while (getchar() != RETURN_CHAR); 
+        uarte_write(BUFFER_OVERFLOW_ERROR_MESSAGE, sizeof(BUFFER_OVERFLOW_ERROR_MESSAGE));
+    }
 
     // Terminate the string
     buffer[i - 1] = '\0';
