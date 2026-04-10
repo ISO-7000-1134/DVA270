@@ -15,6 +15,7 @@ void send_int(int number);
 void lightLEDWithButton();
 
 // Exorcise 3
+void rtc_init();
 void delay_s(int seconds);
 
 // Exorcise 4
