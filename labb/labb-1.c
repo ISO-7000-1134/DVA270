@@ -22,7 +22,7 @@ void uarte_init() {
 void uarte_write(char* string, size_t stringLength) {
     nrfx_uarte_tx(&uarte_instance, string, stringLength, 0);
 }
-uint8_t getchar() {
+uint8_t getchar_uarte() {
     uint8_t* c;
     nrfx_uarte_rx (&uarte_instance, c, sizeof(uint8_t));
     uarte_write(c, sizeof(uint8_t));
@@ -32,15 +32,15 @@ uint8_t getchar() {
 #define BUFFER_OVERFLOW_ERROR_MESSAGE " (inputed string was longer that the buffer size)\r\n"
 void read_string(uint8_t* buffer, size_t bufferSize) {
     int i;
-    buffer[0] = getchar();
+    buffer[0] = getchar_uarte();
     // Read characters until the output buffer is full or a the return character character is given
     for (i = 1; buffer[i - 1] != RETURN_CHAR && i < bufferSize; i++)
-        buffer[i] = getchar();
+        buffer[i] = getchar_uarte();
 
     // If the output buffer was filled and the last character was not the return character,
     // then let the user enter characthers untill a return character
     if (i == bufferSize && buffer[i - 1] != RETURN_CHAR) {
-        while (getchar() != RETURN_CHAR); 
+        while (getchar_uarte() != RETURN_CHAR); 
         uarte_write(BUFFER_OVERFLOW_ERROR_MESSAGE, sizeof(BUFFER_OVERFLOW_ERROR_MESSAGE));
     }
 
