@@ -60,7 +60,19 @@ void lightLEDWithButton() {
 
         if (nrf_gpio_pin_read(BUTTON1) == 0){
             nrf_gpio_pin_write(LED1,LED_ON)
-        }else {nrf_gpio_pin_write(LED1, LED_OF)}
+        }else {nrf_gpio_pin_write(LED1, LED_OFF)}
+
+        if (nrf_gpio_pin_read(BUTTON2) == 0){
+            nrf_gpio_pin_write(LED2,LED_ON)
+        }else {nrf_gpio_pin_write(LED2, LED_OFF)}
+
+        if (nrf_gpio_pin_read(BUTTON3) == 0){
+            nrf_gpio_pin_write(LED3,LED_ON)
+        }else {nrf_gpio_pin_write(LED3, LED_OFF)}
+
+        if (nrf_gpio_pin_read(BUTTON3) == 0){
+            nrf_gpio_pin_write(LED1,LED_ON)
+        }else {nrf_gpio_pin_write(LED3, LED_OFF)}
     }
 }
 
