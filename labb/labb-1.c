@@ -82,7 +82,7 @@ void rtc_init() {
 void delay_s(int seconds) {
     nrfx_rtc_counter_clear(&rtc_instance);
 
-    while (nrfx_rtc_counter_get(&rtc_instance) / 32768);
+    while (nrfx_rtc_counter_get(&rtc_instance) < seconds * 32768);
 }
 
 // Exorcise 4

@@ -5,6 +5,8 @@
 #define LABB_1
 
 // Exorcise 1
+void uarte_init();
+void uarte_write(uint8_t* string, size_t stringLength);
 void read_string(char* buffer, size_t bufferSize);
 int read_int();
 void send_int(int number);
