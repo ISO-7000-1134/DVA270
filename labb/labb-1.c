@@ -28,7 +28,7 @@ uint8_t getchar() {
     return *c;
 }
 #define RETURN_CHAR '\r'
-#define BUFFER_OVERFLOW_ERROR_MESSAGE " (inputed string was longer that the buffer size)"
+#define BUFFER_OVERFLOW_ERROR_MESSAGE " (inputed string was longer that the buffer size)\r\n"
 void read_string(uint8_t* buffer, size_t bufferSize) {
     int i;
     buffer[0] = getchar();
