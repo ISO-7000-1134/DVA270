@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <nrfx_uarte.h>
 #include <nrfx_rtc.h>
@@ -18,7 +19,7 @@ void uarte_init() {
         //Här kan vi implementera felhantering, men för stunden håller vi tummarna att allt funkar
     }
 }
-void uarte_write(uint8_t* string, size_t stringLength) {
+void uarte_write(char* string, size_t stringLength) {
     nrfx_uarte_tx(&uarte_instance, string, stringLength, 0);
 }
 uint8_t getchar() {
@@ -59,7 +60,7 @@ int read_int() {
 void send_int(int number) {
     uint8_t stringOfNum[NUMBER_STRING_BUFFER_SIZE];
     
-    sprintf("%d", number, stringOfNum);
+    sprintf(stringOfNum, "%d", number);
     uarte_write(stringOfNum, sizeof(stringOfNum));
 }
 
