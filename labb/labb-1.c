@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdint.h>
 #include <nrfx_uarte.h>
 #include <nrfx_rtc.h>
@@ -23,10 +24,10 @@ void uarte_write(char* string, size_t stringLength) {
     nrfx_uarte_tx(&uarte_instance, string, stringLength, 0);
 }
 char getchar_uarte() {
-    char* c;
-    nrfx_uarte_rx (&uarte_instance, c, sizeof(char));
-    uarte_write(c, sizeof(char));
-    return *c;
+    char c;
+    nrfx_uarte_rx (&uarte_instance, &c, sizeof(char));
+    uarte_write(&c, sizeof(char));
+    return c;
 }
 #define RETURN_CHAR '\r'
 #define BUFFER_OVERFLOW_ERROR_MESSAGE " (inputed string was longer that the buffer size)\r\n"
@@ -61,7 +62,7 @@ void send_int(int number) {
     char stringOfNum[NUMBER_STRING_BUFFER_SIZE];
     
     sprintf(stringOfNum, "%d", number);
-    uarte_write(stringOfNum, sizeof(stringOfNum));
+    uarte_write(stringOfNum, strlen(stringOfNum));
 }
 
 // Exorcise 2
