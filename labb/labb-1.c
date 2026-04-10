@@ -9,7 +9,7 @@
 // Exorcise 1
 #define PIN_TXD 20
 #define PIN_RXD 22
-const nrfx_uarte_t uarte_instance = NRFX_UARTE_INSTANCE(0);
+nrfx_uarte_t uarte_instance = NRFX_UARTE_INSTANCE(0);
 void uarte_init() {
     const nrfx_uarte_config_t config = NRFX_UARTE_DEFAULT_CONFIG(PIN_TXD, PIN_RXD);
 
@@ -22,15 +22,15 @@ void uarte_init() {
 void uarte_write(char* string, size_t stringLength) {
     nrfx_uarte_tx(&uarte_instance, string, stringLength, 0);
 }
-uint8_t getchar_uarte() {
-    uint8_t* c;
-    nrfx_uarte_rx (&uarte_instance, c, sizeof(uint8_t));
-    uarte_write(c, sizeof(uint8_t));
+char getchar_uarte() {
+    char* c;
+    nrfx_uarte_rx (&uarte_instance, c, sizeof(char));
+    uarte_write(c, sizeof(char));
     return *c;
 }
 #define RETURN_CHAR '\r'
 #define BUFFER_OVERFLOW_ERROR_MESSAGE " (inputed string was longer that the buffer size)\r\n"
-void read_string(uint8_t* buffer, size_t bufferSize) {
+void read_string(char* buffer, size_t bufferSize) {
     int i;
     buffer[0] = getchar_uarte();
     // Read characters until the output buffer is full or a the return character character is given
@@ -50,7 +50,7 @@ void read_string(uint8_t* buffer, size_t bufferSize) {
 
 #define NUMBER_STRING_BUFFER_SIZE 32
 int read_int() {
-    uint8_t stringOfNum[NUMBER_STRING_BUFFER_SIZE];
+    char stringOfNum[NUMBER_STRING_BUFFER_SIZE];
 
     read_string(stringOfNum, NUMBER_STRING_BUFFER_SIZE);
 
@@ -58,7 +58,7 @@ int read_int() {
 }
 
 void send_int(int number) {
-    uint8_t stringOfNum[NUMBER_STRING_BUFFER_SIZE];
+    char stringOfNum[NUMBER_STRING_BUFFER_SIZE];
     
     sprintf(stringOfNum, "%d", number);
     uarte_write(stringOfNum, sizeof(stringOfNum));
