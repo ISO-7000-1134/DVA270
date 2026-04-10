@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <nrfx_uarte.h>
 #include <nrfx_rtc.h>
+#include <systick.h>
 
 
 // Exorcise 1
@@ -77,14 +78,15 @@ void rtc_init() {
 
     //Initierar RTC:
     nrfx_err_t errr = nrfx_rtc_init(&rtc_instance, &config, NULL);
-    if (errr != 0){
-        //Här kan vi implementera felhantering, men för stunden håller vi tummarna att allt funkar
-    }
+    nrfx_rtc_enable(&rtc_instance);
 }
 void delay_s(int seconds) {
     nrfx_rtc_counter_clear(&rtc_instance);
+    uint32_t startTime = nrfx_rtc_counter_get(&rtc_instance);
+    send_int(startTime);
 
-    while (nrfx_rtc_counter_get(&rtc_instance) < seconds * 32768);
+    while (nrfx_rtc_counter_get(&rtc_instance) < startTime + seconds * 32768);
+    send_int(startTime);
 }
 
 // Exorcise 4
