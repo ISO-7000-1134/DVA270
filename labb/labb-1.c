@@ -1,12 +1,26 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <nrfx_uarte.h>
+#include <nrfx_rtc.h>
+
 
 // Exorcise 1
+#define PIN_TXD 20
+#define PIN_RXD 22
+const nrfx_uarte_t uarte_instance = NRFX_UARTE_INSTANCE(0);
+void uarte_init() {
+    const nrfx_uarte_config_t config = NRFX_UARTE_DEFAULT_CONFIG(PIN_TXD, PIN_RXD);
+
+    //Initierar UARTE:
+    nrfx_err_t errr = nrfx_uarte_init(&uarte_instance, &config, NULL);
+    if (errr != 0){
+        //Här kan vi implementera felhantering, men för stunden håller vi tummarna att allt funkar
+    }
+}
 char getchar() {
     char* c;
-    nrfx_uarte_rx (&instance, c, sizeof(char));
-    uarte_write(c, sizeof(char));
+    nrfx_uarte_rx (&uarte_instance, c, sizeof(char));
+    nrfx_uarte_tx(&uarte_instance, c, sizeof(char), 0);
     return *c;
 }
 #define RETURN_CHAR '\r'
@@ -51,8 +65,20 @@ void lightLEDWithButton() {
 }
 
 // Exorcise 3
-void delay_s(int seconds) {
+const nrfx_rtc_t rtc_instance = NRFX_RTC_INSTANCE(0);
+void rtc_init() {
+    const nrfx_rtc_config_t config = NRFX_RTC_DEFAULT_CONFIG();
 
+    //Initierar RTC:
+    nrfx_err_t errr = nrfx_rtc_init(&rtc_instance, &config, NULL);
+    if (errr != 0){
+        //Här kan vi implementera felhantering, men för stunden håller vi tummarna att allt funkar
+    }
+}
+void delay_s(int seconds) {
+    nrfx_rtc_counter_clear(&rtc_instance);
+
+    while (nrfx_rtc_counter_get(&rtc_instance) / 32768);
 }
 
 // Exorcise 4
