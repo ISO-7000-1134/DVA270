@@ -20,6 +20,7 @@
 #define LED_OFF 1
 #define LED_ON 0 
 
+const nrfx_rtc_t rtc_instance = NRDX_RTC_INSTANCE(0);
 
 // Exorcise 1
 void read_string(char* buffer, size_t bufferSize) {
@@ -89,5 +90,11 @@ void delay_s(int seconds) {
 // Exorcise 4
 void init_rng() {
     
+    nrfx_systick_init();
+
+    nrfx_rtc_config_t config = NRFX_RTCDEFAULT_CONFIG;
+    nrfx_err_t errr = nrfx_rtc_init(&rtc_instance. &config, NULL);
+    nrfx_rtc_enable(&rtc_instance);
+
     return;
 }
