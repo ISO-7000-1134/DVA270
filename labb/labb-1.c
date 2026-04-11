@@ -7,6 +7,16 @@
 #include <nrfx_rtc.h>
 #include <systick.h>
 
+#include <nrfx.h>
+#include <nrf5340_application.h>
+#include <nrfx_config.h>
+#include <nrf.h>
+#include <nrfx_systick.h>
+#include <nrf_gpio.h>
+#include "labb-1.h"
+
+
+#define BUTTON1 23
 
 // Exorcise 1
 #define PIN_TXD 20
@@ -91,5 +101,21 @@ void delay_s(int seconds) {
 
 // Exorcise 4
 void init_rng() {
+
+    nrfx_systick_init();
+    nrf_gpio_cfg_output(LED1);
+    // Nollar LEDs
+    nrf_gpio_pin_write(LED1, LED_OFF);  
+    nrf_gpio_cfg_input(BUTTON1, NRF_GPIO_PIN_PULLUP);
+
+    while (1){
+        nrfx_systick_delay_ms(50);
+        
+        if (nrf_gpio_pin_read(BUTTON1) == 0)
+        {
+            int millisek = nrfx_rtc_counter_get(&rtc_instance)/32.768;
+            srand(millisek);
+        }
+    }
     
 }
