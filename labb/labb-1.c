@@ -34,7 +34,7 @@ void uarte_write(char* string, size_t stringLength) {
 }
 char getchar_uarte() {
     char c;
-    nrfx_uarte_rx (&uarte_instance, &c, sizeof(char));
+    nrfx_uarte_rx(&uarte_instance, &c, sizeof(char));
     uarte_write(&c, sizeof(char));
     return c;
 }
@@ -71,6 +71,7 @@ void send_int(int number) {
     char stringOfNum[NUMBER_STRING_BUFFER_SIZE];
     
     sprintf(stringOfNum, "%d", number);
+    
     uarte_write(stringOfNum, strlen(stringOfNum));
 }
 
@@ -139,18 +140,21 @@ void rtc_init() {
     nrfx_rtc_enable(&rtc_instance);
 }
 void delay_s(int seconds) {
+    nrfx_systick_init();
     nrfx_rtc_counter_clear(&rtc_instance);
-    uint32_t startTime = nrfx_rtc_counter_get(&rtc_instance);
+    
+    uint32_t rtc = 0;
+    uint32_t delta_rtc = 0;
     uint32_t overflow = 0;
-
-    uint32_t delta_rtc = startTime;
-    uint32_t rtc;
-    do {
+    while (rtc / 32768 + overflow * 512 < seconds) {
+        delta_rtc = rtc;
         rtc = nrfx_rtc_counter_get(&rtc_instance);
-        if (rtc < delta_rtc)
+
+        if (rtc < delta_rtc) 
             overflow++;
+
+        nrfx_systick_delay_ms(1);
     }
-    while ((nrfx_rtc_counter_get(&rtc_instance) - startTime) / 32768 + overflow * 512 < seconds);
 }
 
 // Exorcise 4
