@@ -13,8 +13,6 @@
 #include <nrf_gpio.h>
 #include <labb-1.h>
 
-#define BUTTON1 23
-
 // Exorcise 1
 #define PIN_TXD 20
 #define PIN_RXD 22
@@ -161,10 +159,17 @@ void delay_s(int seconds) {
 void init_rng() {
     nrfx_systick_init();
     rtc_init();
+    uarte_init();
     nrf_gpio_cfg_input(BUTTON1, NRF_GPIO_PIN_PULLUP);
 
-    while (nrf_gpio_pin_read(BUTTON1) != 0)
-        nrfx_systick_delay_ms(50);
+    while (1)
+    {
+        while (nrf_gpio_pin_read(BUTTON1) != 0)
+            nrfx_systick_delay_ms(50);
 
-    srand(nrfx_rtc_counter_get(&rtc_instance));
+        srand(nrfx_rtc_counter_get(&rtc_instance));
+        send_int(rand() % 1000);
+        nrfx_systick_delay_ms(500);
+    }
 }
+    
