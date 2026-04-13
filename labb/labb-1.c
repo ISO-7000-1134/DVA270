@@ -5,16 +5,13 @@
 #include <stdint.h>
 #include <nrfx_uarte.h>
 #include <nrfx_rtc.h>
-//#include <systick.h>
-
 #include <nrfx.h>
 #include <nrf5340_application.h>
 #include <nrfx_config.h>
 #include <nrf.h>
 #include <nrfx_systick.h>
 #include <nrf_gpio.h>
-#include "labb-1.h"
-
+#include <labb-1.h>
 
 #define BUTTON1 23
 
@@ -111,19 +108,11 @@ void init_rng() {
     nrfx_systick_init();
     // Nollar LEDs
     nrf_gpio_cfg_input(BUTTON1, NRF_GPIO_PIN_PULLUP);
+    uarte_init();
+    rtc_init();
 
-    while (1){
+    while (nrf_gpio_pin_read(BUTTON1) != 0)
         nrfx_systick_delay_ms(50);
-        const nrfx_rtc_config_t config = NRFX_RTC_DEFAULT_CONFIG;
-        //Initierar RTC:
-        nrfx_err_t errr = nrfx_rtc_init(&rtc_instance, &config, NULL);
-        
-        if (nrf_gpio_pin_read(BUTTON1) == 0)
-        {
-            float millisek = _rtc_counter_get(&rtc_instance)/32.768;
-            srand(millisek);
-            uint32_t number = rand();
-        }
-    }
-    
+
+    srand(nrfx_rtc_counter_get(&rtc_instance));
 }
