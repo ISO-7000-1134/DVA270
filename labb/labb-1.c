@@ -83,6 +83,7 @@ void send_int(int number) {
 #define BUTTON4 9
 #define LED_OFF 1
 #define LED_ON 0 
+
 void button_led_init() {
     nrf_gpio_cfg_output(LED1);
     nrf_gpio_cfg_output(LED2);
@@ -153,6 +154,8 @@ void delay_s(int seconds) {
 
 // Exorcise 4
 void init_rng() {
+    char newLine[20];
+
     nrfx_systick_init();
     rtc_init();
     uarte_init();
@@ -166,6 +169,9 @@ void init_rng() {
         srand(nrfx_rtc_counter_get(&rtc_instance));
         send_int(rand() % 1000);
         nrfx_systick_delay_ms(500);
+
+        sprintf(newLine, " \r\n");
+        uarte_write(newLine, strlen(newLine));
     }
 }
     
