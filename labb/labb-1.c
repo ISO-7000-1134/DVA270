@@ -18,6 +18,7 @@
 // Exorcise 1
 #define PIN_TXD 20
 #define PIN_RXD 22
+
 nrfx_uarte_t uarte_instance = NRFX_UARTE_INSTANCE(0);
 void uarte_init() {
     const nrfx_uarte_config_t config = NRFX_UARTE_DEFAULT_CONFIG(PIN_TXD, PIN_RXD);
@@ -74,8 +75,58 @@ void send_int(int number) {
 }
 
 // Exorcise 2
+#define LED1 28
+#define LED2 29 
+#define LED3 30
+#define LED4 31
+#define BUTTON1 23
+#define BUTTON2 24 
+#define BUTTON3 8
+#define BUTTON4 9
+#define LED_OFF 1
+#define LED_ON 0 
+void button_led_init() {
+    nrf_gpio_cfg_output(LED1);
+    nrf_gpio_cfg_output(LED2);
+    nrf_gpio_cfg_output(LED3);
+    nrf_gpio_cfg_output(LED4);
+
+    nrf_gpio_pin_write(LED1, LED_OFF);
+    nrf_gpio_pin_write(LED2, LED_OFF);
+    nrf_gpio_pin_write(LED3, LED_OFF);
+    nrf_gpio_pin_write(LED4, LED_OFF);
+
+    nrf_gpio_cfg_input(BUTTON1, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(BUTTON2, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(BUTTON3, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(BUTTON4, NRF_GPIO_PIN_PULLUP);
+}
 void lightLEDWithButton() {
 
+    nrfx_systick_init();
+
+    button_led_init();
+    
+    while(1)
+    {
+        nrfx_systick_delay_ms(50);
+        
+        if (nrf_gpio_pin_read(BUTTON1) == 0){
+            nrf_gpio_pin_write(LED1,LED_ON);
+        }else {nrf_gpio_pin_write(LED1, LED_OFF);}
+
+        if (nrf_gpio_pin_read(BUTTON2) == 0){
+            nrf_gpio_pin_write(LED2,LED_ON);
+        }else {nrf_gpio_pin_write(LED2, LED_OFF);}
+
+        if (nrf_gpio_pin_read(BUTTON3) == 0){
+            nrf_gpio_pin_write(LED3,LED_ON);
+        }else {nrf_gpio_pin_write(LED3, LED_OFF);}
+
+        if (nrf_gpio_pin_read(BUTTON4) == 0){
+            nrf_gpio_pin_write(LED4,LED_ON);
+        }else{nrf_gpio_pin_write(LED4, LED_OFF);}
+    }
 }
 
 // Exorcise 3
@@ -104,12 +155,9 @@ void delay_s(int seconds) {
 
 // Exorcise 4
 void init_rng() {
-
     nrfx_systick_init();
-    // Nollar LEDs
-    nrf_gpio_cfg_input(BUTTON1, NRF_GPIO_PIN_PULLUP);
-    uarte_init();
     rtc_init();
+    nrf_gpio_cfg_input(BUTTON1, NRF_GPIO_PIN_PULLUP);
 
     while (nrf_gpio_pin_read(BUTTON1) != 0)
         nrfx_systick_delay_ms(50);
