@@ -93,10 +93,16 @@ void rtc_init() {
 void delay_s(int seconds) {
     nrfx_rtc_counter_clear(&rtc_instance);
     uint32_t startTime = nrfx_rtc_counter_get(&rtc_instance);
-    send_int(startTime);
+    uint32_t overflow = 0;
 
-    while (nrfx_rtc_counter_get(&rtc_instance) < startTime + seconds * 32768);
-    send_int(startTime);
+    uint32_t delta_rtc = startTime;
+    uint32_t rtc;
+    do {
+        rtc = nrfx_rtc_counter_get(&rtc_instance);
+        if (rtc < delta_rtc)
+            overflow++;
+    }
+    while ((nrfx_rtc_counter_get(&rtc_instance) - startTime) / 32768 + overflow * 512 < seconds);
 }
 
 // Exorcise 4
