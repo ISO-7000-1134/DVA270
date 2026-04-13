@@ -103,29 +103,46 @@ void button_led_init() {
 }
 void lightLEDWithButton() {
 
+    int btn1Counter = 0, btn2Counter = 0, btn3Counter = 0, btn4Counter = 0;
+
     nrfx_systick_init();
 
     button_led_init();
     
     while(1)
     {
-        nrfx_systick_delay_ms(50);
+        nrfx_systick_delay_ms(200);
         
         if (nrf_gpio_pin_read(BUTTON1) == 0){
-            nrf_gpio_pin_write(LED1,LED_ON);
-        }else {nrf_gpio_pin_write(LED1, LED_OFF);}
-
+            btn1Counter++;
+            if (btn1Counter % 2 == 0)
+                nrf_gpio_pin_write(LED1,LED_OFF);
+            else
+                nrf_gpio_pin_write(LED1,LED_ON);   
+        }
         if (nrf_gpio_pin_read(BUTTON2) == 0){
-            nrf_gpio_pin_write(LED2,LED_ON);
-        }else {nrf_gpio_pin_write(LED2, LED_OFF);}
+            btn2Counter++;
+            if (btn2Counter % 2 == 0)
+                nrf_gpio_pin_write(LED2,LED_OFF);
+            else
+                nrf_gpio_pin_write(LED2,LED_ON);
+        }
 
         if (nrf_gpio_pin_read(BUTTON3) == 0){
-            nrf_gpio_pin_write(LED3,LED_ON);
-        }else {nrf_gpio_pin_write(LED3, LED_OFF);}
+            btn3Counter++;
+            if (btn3Counter % 2 == 0)
+                nrf_gpio_pin_write(LED3,LED_OFF);
+            else
+                nrf_gpio_pin_write(LED3,LED_ON);
+        }
 
         if (nrf_gpio_pin_read(BUTTON4) == 0){
-            nrf_gpio_pin_write(LED4,LED_ON);
-        }else{nrf_gpio_pin_write(LED4, LED_OFF);}
+            btn4Counter++;
+            if (btn4Counter % 2 == 0)
+                nrf_gpio_pin_write(LED4,LED_OFF);
+            else
+                nrf_gpio_pin_write(LED4,LED_ON);
+        }
     }
 }
 
