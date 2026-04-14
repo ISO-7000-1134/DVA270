@@ -163,14 +163,14 @@ void delay_s(int seconds) {
     uint32_t delta_rtc;
     uint32_t overflow = 0;
     char str[] = "\n\r";
-    while (rtc / 32768 + overflow * 0 < seconds) {
-        delta_rtc = rtc;
+    while (rtc / 32768 + overflow * 512 < seconds) {
         rtc = nrfx_rtc_counter_get(&rtc_instance);
 
         if (rtc < delta_rtc) 
             overflow++;
 
         nrfx_systick_delay_ms(1);
+        delta_rtc = rtc;
     }
 }
 
