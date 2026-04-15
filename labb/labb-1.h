@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdlib.h>
+#include <nrfx_rtc.h>
 
 #ifndef LABB_1
 #define LABB_1
@@ -12,9 +13,23 @@ int read_int();
 void send_int(int number);
 
 // Exorcise 2
+#define LED1 28
+#define LED2 29 
+#define LED3 30
+#define LED4 31
+#define BUTTON1 23
+#define BUTTON2 24 
+#define BUTTON3 8
+#define BUTTON4 9
+#define LED_OFF 1
+#define LED_ON 0 
+
+void button_led_init();
 void lightLEDWithButton();
 
 // Exorcise 3
+extern nrfx_rtc_t rtc_instance;
+
 void rtc_init();
 void delay_s(int seconds);
 

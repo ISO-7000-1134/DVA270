@@ -74,17 +74,6 @@ void send_int(int number) {
 }
 
 // Exorcise 2
-#define LED1 28
-#define LED2 29 
-#define LED3 30
-#define LED4 31
-#define BUTTON1 23
-#define BUTTON2 24 
-#define BUTTON3 8
-#define BUTTON4 9
-#define LED_OFF 1
-#define LED_ON 0 
-
 void button_led_init() {
     nrf_gpio_cfg_output(LED1);
     nrf_gpio_cfg_output(LED2);
@@ -175,24 +164,20 @@ void delay_s(int seconds) {
 
 // Exorcise 4
 void init_rng() {
-    char newLine[20];
-
     nrfx_systick_init();
     rtc_init();
-    uarte_init();
     nrf_gpio_cfg_input(BUTTON1, NRF_GPIO_PIN_PULLUP);
 
-    while (1)
-    {
-        while (nrf_gpio_pin_read(BUTTON1) != 0)
-            nrfx_systick_delay_ms(50);
+    while (nrf_gpio_pin_read(BUTTON1) != 0)
+        nrfx_systick_delay_ms(50);
 
-        srand(nrfx_rtc_counter_get(&rtc_instance));
-        send_int(rand() % 1000);
-        nrfx_systick_delay_ms(500);
+    srand(nrfx_rtc_counter_get(&rtc_instance));
+}
 
-        sprintf(newLine, " \r\n");
-        uarte_write(newLine, strlen(newLine));
-    }
+// Extra 
+void init_all() {
+    uarte_init();
+    rtc_init();
+    button_led_init();
 }
     
