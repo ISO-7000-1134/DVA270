@@ -35,7 +35,6 @@ void send_int(int number);
 #define LED_ON 0 
 
 void button_led_init();
-void lightLEDWithButton();
 
 // Exorcise 3
 void rtc_init();
