@@ -1,16 +1,3 @@
-#include <stdlib.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-#include <nrfx_uarte.h>
-#include <nrfx_rtc.h>
-#include <nrfx.h>
-#include <nrf5340_application.h>
-#include <nrfx_config.h>
-#include <nrf.h>
-#include <nrfx_systick.h>
-#include <nrf_gpio.h>
 #include <labb-1.h>
 
 // Exorcise 1

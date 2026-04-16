@@ -1,6 +1,16 @@
-#include <stddef.h>
 #include <stdlib.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+#include <nrfx_uarte.h>
 #include <nrfx_rtc.h>
+#include <nrfx.h>
+#include <nrf5340_application.h>
+#include <nrfx_config.h>
+#include <nrf.h>
+#include <nrfx_systick.h>
+#include <nrf_gpio.h>
 
 #ifndef LABB_1
 #define LABB_1
@@ -28,8 +38,6 @@ void button_led_init();
 void lightLEDWithButton();
 
 // Exorcise 3
-extern nrfx_rtc_t rtc_instance;
-
 void rtc_init();
 void delay_s(int seconds);
 
