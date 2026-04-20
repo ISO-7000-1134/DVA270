@@ -96,15 +96,15 @@ Data get_first_element(const List list)
 
 //returnera sista datat i listan. 
 //precondition: listan är inte tom (testa med assert)
-Data get_last_element(const List list)
+Data get_last_element(const List tail)
 {
-
+	return tail->data;
 }
 
 //Returnera hur många noder som finns i listan
-int number_of_nodes(const List list)
+int number_of_nodes(const List head)
 {
-
+	return number_of_nodes(head->next) + 1;
 }
 
 //Sök efter data i listan, returnera 1 om datat finns, annars 0.
