@@ -19,7 +19,7 @@ typedef int Data;
 /* dubbellänkad lista.                                 */
 /*******************************************************/
 
-/*
+
 //struktdefinition för dubbellänkad lista
 typedef struct node
 {
@@ -27,7 +27,7 @@ typedef struct node
 	struct node* next;
 	struct node* previous;
 }Node;
-*/
+
 
 /*
 //struktdefinition för enkellänkad lista
@@ -50,10 +50,10 @@ List create_empty_list(void);
 int is_empty(const List list);
 
 //Lägg till en nod först i listan
-void add_first(List *list, const Data data);
+void add_first(List *head, const Data data);
 
 //Lägg till nod sist i listan
-void add_last(List *list, const Data data);
+void add_last(List *tail, const Data data);
 
 //Ta bort första noden i listan
 void remove_first(List *list);

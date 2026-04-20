@@ -13,7 +13,12 @@ List create_empty_list(void)
 //Notera att den är static och inte finns med i interfacet
 static Node * create_list_node(const Data data)
 {
-	//glöm inte att kolla så att malloc inte returnerade NULL
+	Node* newNode = (Node*)malloc(sizeof(Node));
+
+	if (newNode != NULL)
+		newNode->data = data;
+
+	return newNode;
 }
 
 //Är listan tom?
@@ -24,13 +29,21 @@ int is_empty(const List list)
 }
 
 //Lägg till en nod först i listan
-void add_first(List *list, const Data data)
+void add_first(List *head, const Data data)
 {
+	Node* first = *head;
 
+	*head = create_list_node(data);
+
+	if (*head != NULL) {
+		*head->next = first;
+	} else {
+		*head = first;
+	}
 }
 
 //lägg till nod sist i listan
-void add_last(List *list, const Data data)
+void add_last(List *tail, const Data data)
 {
 
 }
