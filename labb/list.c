@@ -19,7 +19,8 @@ static Node * create_list_node(const Data data)
 		newNode->data = data;
 		newNode->next = NULL;
 		newNode->previous = NULL;
-	}
+	} else 
+		assert(1);
 
 	return newNode;
 }
@@ -32,32 +33,52 @@ int is_empty(const List list)
 }
 
 //Lägg till en nod först i listan
-void add_first(List *head, const Data data)
+void add_first(List *list, const Data data)
 {
-	Node* first = *head;
-
-	*head = create_list_node(data);
-
-	if (*head != NULL) {
-		*head->next = first;
-	} else {
-		*head = first;
+	// Empty list -> add an item
+	if (*list == NULL) {
+		*list = create_list_node();
+		return;
 	}
+
+	List head = *list;
+
+	// Find head
+	while (head->previous != NULL)
+		head = head->previous;
+
+	Node* first = create_list_node(data);
+
+	// Check if new node was created
+	if (first != NULL) {
+		head->previous = first;
+		first->next = head;
+	} else 
+		assert(1);
 }
 
 //lägg till nod sist i listan
-void add_last(List *tail, const Data data)
+void add_last(List *list, const Data data)
 {
-	Node* last = *tail;
-
-	*tail = create_list_node(data);
-
-	if (*tail != NULL) {
-		*tail->previous = last;
-	} else {
-		*tail = last;
+	// Empty list -> add an item
+	if (*list == NULL) {
+		*list = create_list_node();
+		return;
 	}
 
+	List tail = *list;
+
+	// Find tail
+	while (tail->next != NULL)
+		tail = tail->next;
+
+	Node* last = create_list_node(data);
+
+	if (last != NULL) {
+		tail->next = last;
+		last->previous = tail;
+	} else 
+		assert(1);
 }
 
 //Ta bort första noden i listan
@@ -96,15 +117,40 @@ Data get_first_element(const List list)
 
 //returnera sista datat i listan. 
 //precondition: listan är inte tom (testa med assert)
-Data get_last_element(const List tail)
+Data get_last_element(const List list)
 {
+	List tail = *list;
+
+	// Find tail
+	while (tail->next != NULL)
+		tail = tail->next;
+
 	return tail->data;
 }
 
 //Returnera hur många noder som finns i listan
-int number_of_nodes(const List head)
+int number_of_nodes(const List list)
 {
-	return number_of_nodes(head->next) + 1;
+	// Empty list
+	if (list == NULL)
+		return 0;
+
+	List head = *list;
+	List tail = *list;
+	int count = 1;
+
+	// Find the count of items between 'list' and tail
+	while (tail->next != NULL) {
+		tail = tail->next;
+		count++;
+	}
+	// Find the count of items between 'list' and head
+	while (head->previous != NULL) {
+		head = head->prev;
+		count++;
+	}
+
+	return count;
 }
 
 //Sök efter data i listan, returnera 1 om datat finns, annars 0.
@@ -114,17 +160,28 @@ int search(const List list, const Data data)
 }
 
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
-int remove_element(List *head, const Data data)
+int remove_element(List *list, const Data data)
 {
-	if(*head->data == data) {
-		if (*head->previous != NULL)
-			*head->previous->next = *head->next;
-		if (*head->next != NULL)
-			*head->next->previous = *head->previous;
-		free(*head);
+	// Empty list
+	if (list == NULL)
+		return 0;
+
+	List head = *list;
+
+	// Find head
+	while (head->previous != NULL)
+		head = head->previous;
+
+	// Delete first occurance
+	if(head->data == data) {
+		if (head->previous != NULL)
+			head->previous->next = head->next;
+		if (head->next != NULL)
+			head->next->previous = head->previous;
+		free(head);
 		return 1;
 	} else if(head->next == NULL)
 		return 0;
 	else 
-		return remove_element(*head->next, data);
+		return remove_element(head->next, data);
 }

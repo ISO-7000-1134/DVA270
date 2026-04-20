@@ -2,6 +2,8 @@
 #define LIST_H
 
 #include <nrfx.h>
+#include <stdlib.h>
+#include <assert.h>
 
 /*******************************************************/
 /* DVA270 - Interface för dubbellänkad lista           */
@@ -50,10 +52,10 @@ List create_empty_list(void);
 int is_empty(const List list);
 
 //Lägg till en nod först i listan
-void add_first(List *head, const Data data);
+void add_first(List *list, const Data data);
 
 //Lägg till nod sist i listan
-void add_last(List *tail, const Data data);
+void add_last(List *list, const Data data);
 
 //Ta bort första noden i listan
 void remove_first(List *list);
@@ -71,16 +73,16 @@ void print_list(const List list);
 Data get_first_element(const List list);
 
 //Returnera sista datat i listan
-Data get_last_element(const List tail);
+Data get_last_element(const List list);
 
 //Returnera hur många noder som finns i listan
-int number_of_nodes(const List head);
+int number_of_nodes(const List list);
 
 //Sök efter data i listan, returnera 1 om datat finns, annars 0.
 int search(const List list, const Data data);
 
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
-int remove_element(List *head, const Data data);
+int remove_element(List *list, const Data data);
 
 
 #endif
