@@ -114,17 +114,17 @@ int search(const List list, const Data data)
 }
 
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
-int remove_element(List *list, const Data data)
+int remove_element(List *head, const Data data)
 {
-	if(*list->data == data) {
-		if (*list->previous != NULL)
-			*list->previous->next = *list->next;
-		if (*list->next != NULL)
-			*list->next->previous = *list->previous;
-		free(*list);
+	if(*head->data == data) {
+		if (*head->previous != NULL)
+			*head->previous->next = *head->next;
+		if (*head->next != NULL)
+			*head->next->previous = *head->previous;
+		free(*head);
 		return 1;
-	} else if(list->next == NULL)
+	} else if(head->next == NULL)
 		return 0;
 	else 
-		return remove_element(*list->next, data);
+		return remove_element(*head->next, data);
 }

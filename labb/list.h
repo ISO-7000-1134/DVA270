@@ -71,16 +71,16 @@ void print_list(const List list);
 Data get_first_element(const List list);
 
 //Returnera sista datat i listan
-Data get_last_element(const List list);
+Data get_last_element(const List tail);
 
 //Returnera hur många noder som finns i listan
-int number_of_nodes(const List list);
+int number_of_nodes(const List head);
 
 //Sök efter data i listan, returnera 1 om datat finns, annars 0.
 int search(const List list, const Data data);
 
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
-int remove_element(List *list, const Data data);
+int remove_element(List *head, const Data data);
 
 
 #endif
