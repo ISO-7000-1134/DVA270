@@ -15,8 +15,11 @@ static Node * create_list_node(const Data data)
 {
 	Node* newNode = (Node*)malloc(sizeof(Node));
 
-	if (newNode != NULL)
+	if (newNode != NULL) {
 		newNode->data = data;
+		newNode->next = NULL;
+		newNode->previous = NULL;
+	}
 
 	return newNode;
 }
@@ -45,6 +48,15 @@ void add_first(List *head, const Data data)
 //lägg till nod sist i listan
 void add_last(List *tail, const Data data)
 {
+	Node* last = *tail;
+
+	*tail = create_list_node(data);
+
+	if (*tail != NULL) {
+		*tail->previous = last;
+	} else {
+		*tail = last;
+	}
 
 }
 
