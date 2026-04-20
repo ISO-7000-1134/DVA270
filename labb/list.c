@@ -85,7 +85,12 @@ void add_last(List *list, const Data data)
 //precondition: listan är inte tom (testa med assert)
 void remove_first(List *list)
 {
-
+	assert(head != NULL); 
+    assert(head->next != NULL); 
+    Node* toRemove = head; 
+    if (head->next != NULL) 
+        head->next->previous = head->previous; 
+    free(toRemove); 
 }
 
 //ta bort sista noden i listan
