@@ -37,7 +37,7 @@ void add_first(List *list, const Data data)
 {
 	// Empty list -> add an item
 	if (*list == NULL) {
-		*list = create_list_node();
+		*list = create_list_node(data);
 		return;
 	}
 
@@ -62,7 +62,7 @@ void add_last(List *list, const Data data)
 {
 	// Empty list -> add an item
 	if (*list == NULL) {
-		*list = create_list_node();
+		*list = create_list_node(data);
 		return;
 	}
 
@@ -119,7 +119,7 @@ Data get_first_element(const List list)
 //precondition: listan är inte tom (testa med assert)
 Data get_last_element(const List list)
 {
-	List tail = *list;
+	List tail = list;
 
 	// Find tail
 	while (tail->next != NULL)
@@ -135,8 +135,8 @@ int number_of_nodes(const List list)
 	if (list == NULL)
 		return 0;
 
-	List head = *list;
-	List tail = *list;
+	List head = list;
+	List tail = list;
 	int count = 1;
 
 	// Find the count of items between 'list' and tail
@@ -146,7 +146,7 @@ int number_of_nodes(const List list)
 	}
 	// Find the count of items between 'list' and head
 	while (head->previous != NULL) {
-		head = head->prev;
+		head = head->previous;
 		count++;
 	}
 
