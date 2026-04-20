@@ -116,5 +116,10 @@ int search(const List list, const Data data)
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
 int remove_element(List *list, const Data data)
 {
-
+	if(*list->data == data)
+		return 1;
+	else if(list->next == NULL)
+		return 0;
+	else 
+		return remove_element(*list->next, data);
 }
