@@ -83,7 +83,7 @@ void add_last(List *list, const Data data)
 
 //Ta bort första noden i listan
 //precondition: listan är inte tom (testa med assert)
-void remove_first(List *list)
+void remove_first(List *head)
 {
 	assert(head != NULL); 
     assert(head->next != NULL); 
@@ -95,9 +95,14 @@ void remove_first(List *list)
 
 //ta bort sista noden i listan
 //precondition: listan är inte tom (testa med assert)
-void remove_last(List *list)
+void remove_last(List *tail)
 {
-
+	assert(tail != NULL); 
+    assert(tail->next != NULL); 
+    Node* toRemove = tail; 
+    if (tail->previous != NULL) 
+        tail->previous->next = tail->next; 
+    free(toRemove); 
 }
 
 //töm listan (ta bort alla noder ur listan)
