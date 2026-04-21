@@ -1,5 +1,5 @@
 #include "list.h"
-
+#include "labb-1.h"
 
 
 //Returnera en tom lista - funktionen är färdig
@@ -123,8 +123,22 @@ void clear_list(List *head)
 
 //Skriv ut listan genom UART
 void print_list(const List list)
-{
+{	
+	assert(list != NULL);
+	if (list == NULL) // If list is empty
+		return;
 
+	List head = list;
+	// Find head
+	while (head->previous != NULL)
+		head = head->previous;
+
+	while (head != NULL)
+	{	char dataToPrint[64];
+		sprintf(dataToPrint, "%d ", head->data);
+		uarte_write(dataToPrint, sizeof(dataToPrint));
+		head = head->next; // goes to next node
+	}
 }
 
 //returnera första datat i listan
