@@ -107,9 +107,18 @@ void remove_last(List *tail)
 
 //töm listan (ta bort alla noder ur listan)
 //postcondition: Listan är tom, *list är NULL
-void clear_list(List *list)
+void clear_list(List *head)
 {
 	//alla noder ska frigöras
+
+	// Empty list
+	assert(head != NULL);
+
+	if (head->previous != NULL)
+		head->previous->next = head->next;
+	if (head->next != NULL)
+		head->next->previous = head->previous;
+	free(head);
 }
 
 //Skriv ut listan genom UART
@@ -122,7 +131,13 @@ void print_list(const List list)
 //precondition: listan är inte tom (testa med assert)
 Data get_first_element(const List list)
 {
+	List head = list;
 
+	//Find head
+	while (head->previous != NULL)
+		head = head->previous;
+
+	return head->data;
 }
 
 //returnera sista datat i listan. 
