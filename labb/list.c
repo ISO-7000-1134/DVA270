@@ -86,10 +86,10 @@ void add_last(List *list, const Data data)
 void remove_first(List *head)
 {
 	assert(head != NULL); 
-    assert(head->next != NULL); 
+    assert((*head)->next != NULL); 
     Node* toRemove = head; 
-    if (head->next != NULL) 
-        head->next->previous = head->previous; 
+    if ((*head)->next != NULL) 
+        (*head)->next->previous = (*head)->previous; 
     free(toRemove); 
 }
 
@@ -98,10 +98,10 @@ void remove_first(List *head)
 void remove_last(List *tail)
 {
 	assert(tail != NULL); 
-    assert(tail->next != NULL); 
+    assert((*tail)->next != NULL); 
     Node* toRemove = tail; 
-    if (tail->previous != NULL) 
-        tail->previous->next = tail->next; 
+    if ((*tail)->previous != NULL) 
+        (*tail)->previous->next = (*tail)->next; 
     free(toRemove); 
 }
 
@@ -114,10 +114,10 @@ void clear_list(List *head)
 	// Empty list
 	assert(head != NULL);
 
-	if (head->previous != NULL)
-		head->previous->next = head->next;
-	if (head->next != NULL)
-		head->next->previous = head->previous;
+	if ((*head)->previous != NULL)
+		(*head)->previous->next = (*head)->next;
+	if ((*head)->next != NULL)
+		(*head)->next->previous = (*head)->previous;
 	free(head);
 }
 
@@ -135,8 +135,8 @@ void print_list(const List list)
 
 	while (head != NULL)
 	{	char dataToPrint[64];
-		sprintf(dataToPrint, "%d ", head->data);
-		uarte_write(dataToPrint, sizeof(dataToPrint));
+		sprintf(dataToPrint, sizeof(dataToPrint), "%d\r\n", head->data);
+		uarte_write(dataToPrint, strlen(dataToPrint));
 		head = head->next; // goes to next node
 	}
 }
