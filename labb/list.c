@@ -1,5 +1,5 @@
 #include "list.h"
-
+#include "labb-1.h"
 
 
 //Returnera en tom lista - funktionen är färdig
@@ -51,8 +51,14 @@ void add_first(List *list, const Data data)
 
 	// Check if new node was created
 	if (first != NULL) {
-		head->previous = first;
-		first->next = head;
+		// Update list pointer if list was head
+		if (head == *list) {
+			*list->previous = first;
+			first->next = *list;
+		} else {
+			head->previous = first;
+			first->next = head;
+		}
 	} /*else 
 		assert(1);*/
 }
@@ -75,8 +81,14 @@ void add_last(List *list, const Data data)
 	Node* last = create_list_node(data);
 
 	if (last != NULL) {
-		tail->next = last;
-		last->previous = tail;
+		// Update list pointer if list was head
+		if (tail == *list) {
+			*list->next = last;
+			last->previous = *list;
+		} else {
+			tail->next = last;
+			last->previous = tail;
+		}
 	} /*else 
 		assert(1);*/
 		
@@ -87,36 +99,75 @@ void add_last(List *list, const Data data)
 
 //Ta bort första noden i listan
 //precondition: listan är inte tom (testa med assert)
-void remove_first(List *list)
+void remove_first(List *head)
 {
-
+	assert(head != NULL); 
+    assert((*head)->next != NULL); 
+    Node* toRemove = head; 
+    if ((*head)->next != NULL) 
+        (*head)->next->previous = (*head)->previous; 
+    free(toRemove); 
 }
 
 //ta bort sista noden i listan
 //precondition: listan är inte tom (testa med assert)
-void remove_last(List *list)
+void remove_last(List *tail)
 {
-
+	assert(tail != NULL); 
+    assert((*tail)->next != NULL); 
+    Node* toRemove = tail; 
+    if ((*tail)->previous != NULL) 
+        (*tail)->previous->next = (*tail)->next; 
+    free(toRemove); 
 }
 
 //töm listan (ta bort alla noder ur listan)
 //postcondition: Listan är tom, *list är NULL
-void clear_list(List *list)
+void clear_list(List *head)
 {
 	//alla noder ska frigöras
+
+	// Empty list
+	assert(head != NULL);
+
+	if ((*head)->previous != NULL)
+		(*head)->previous->next = (*head)->next;
+	if ((*head)->next != NULL)
+		(*head)->next->previous = (*head)->previous;
+	free(head);
 }
 
 //Skriv ut listan genom UART
 void print_list(const List list)
-{
+{	
+	assert(list != NULL);
+	if (list == NULL) // If list is empty
+		return;
 
+	List head = list;
+	// Find head
+	while (head->previous != NULL)
+		head = head->previous;
+
+	while (head != NULL)
+	{	char dataToPrint[64];
+		sprintf(dataToPrint, sizeof(dataToPrint), "%d\r\n", head->data);
+		uarte_write(dataToPrint, strlen(dataToPrint));
+		head = head->next; // goes to next node
+	}
 }
 
 //returnera första datat i listan
 //precondition: listan är inte tom (testa med assert)
 Data get_first_element(const List list)
 {
+	List head = list;
 
+	//Find head
+	while (head->previous != NULL)
+		head = head->previous;
+
+	return head->data;
 }
 
 //returnera sista datat i listan. 
@@ -159,8 +210,23 @@ int number_of_nodes(const List list)
 
 //Sök efter data i listan, returnera 1 om datat finns, annars 0.
 int search(const List list, const Data data)
-{
-	
+{	
+	// Check if list is empty
+	if (list == NULL)
+		return 0;
+
+	List head = list;
+
+	// Find head
+	// while (head->previous != NULL)
+	// 	head = head->previous;
+
+	if(head->data == data) {
+		return 1;
+	} else if(head->next == NULL)
+		return 0;
+	else
+		return search(head->next, data);
 }
 
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
