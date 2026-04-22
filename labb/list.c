@@ -148,7 +148,7 @@ void print_list(const List list)
 	char newLine[64] = "\n\r";
 	while (head != NULL)
 	{	
-	send_int(list->data)
+	send_int(list->data);
 	uarte_write(newLine, strlen(newLine));
 		head = head->next; // goes to next node
 	}
