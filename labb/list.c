@@ -225,17 +225,17 @@ int search(const List list, const Data data)
 }
 
 static int remove_element_from_head(List *head, const Data data) {
-	if(head->data == data) {
-		if (head->previous != NULL)
-			head->previous->next = head->next;
-		if (head->next != NULL)
-			head->next->previous = head->previous;
+	if((*head)->data == data) {
+		if ((*head)->previous != NULL)
+			(*head)->previous->next = (*head)->next;
+		if ((*head)->next != NULL)
+			(*head)->next->previous = (*head)->previous;
 		free(head);
 		return 1;
-	} else if(head->next == NULL)
+	} else if((*head)->next == NULL)
 		return 0;
 	
-	remove_element_from_head(head->next);
+	remove_element_from_head((*head)->next, data);
 }
 
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
@@ -251,5 +251,5 @@ int remove_element(List *list, const Data data)
 	while (head->previous != NULL)
 		head = head->previous;
 
-	remove_element_from_head(head, data;)
+	remove_element_from_head(head, data);
 }
