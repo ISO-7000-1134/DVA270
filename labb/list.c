@@ -53,7 +53,7 @@ void add_first(List *list, const Data data)
 	if (first != NULL) {
 		// Update list pointer if list was head
 		if (head == *list) {
-			*list->previous = first;
+			(*list)->previous = first;
 			first->next = *list;
 		} else {
 			head->previous = first;
@@ -83,7 +83,7 @@ void add_last(List *list, const Data data)
 	if (last != NULL) {
 		// Update list pointer if list was head
 		if (tail == *list) {
-			*list->next = last;
+			(*list)->next = last;
 			last->previous = *list;
 		} else {
 			tail->next = last;
@@ -91,10 +91,6 @@ void add_last(List *list, const Data data)
 		}
 	} /*else 
 		assert(1);*/
-		
-	// if list was the head, set it to the new head
-	if (*list->next != NULL)
-		*list = tail;
 }
 
 //Ta bort första noden i listan
@@ -140,17 +136,7 @@ void clear_list(List *head)
 //Skriv ut listan genom UART
 void print_list(const List list)
 {	
-	if (list == NULL) // If list is empty
-		return;
-
-	char dataToPrint[64];
-	sprintf(dataToPrint, sizeof(dataToPrint), "%d\n\r", head->data);
-	uarte_write(dataToPrint, strlen(dataToPrint));
-	head = head->next; // goes to next nod
-
-	print_list(list->next);
-
-	/*assert(list != NULL);
+	assert(list != NULL);
 	if (list == NULL) // If list is empty
 		return;
 
@@ -159,12 +145,13 @@ void print_list(const List list)
 	while (head->previous != NULL)
 		head = head->previous;
 
+	char newLine[64] = "\n\r";
 	while (head != NULL)
-	{	char dataToPrint[64];
-		sprintf(dataToPrint, sizeof(dataToPrint), "%d\n\r", head->data);
-		uarte_write(dataToPrint, strlen(dataToPrint));
+	{	
+	send_int(list->data)
+	uarte_write(newLine, strlen(newLine));
 		head = head->next; // goes to next node
-	}*/
+	}
 }
 
 //returnera första datat i listan
