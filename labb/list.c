@@ -238,15 +238,17 @@ int remove_element(List *list, const Data data)
 		head = head->previous;
 
 	// Delete first occurance
-	if(head->data == data) {
-		if (head->previous != NULL)
-			head->previous->next = head->next;
-		if (head->next != NULL)
-			head->next->previous = head->previous;
-		free(head);
-		return 1;
-	} else if(head->next == NULL)
-		return 0;
-	else 
-		return remove_element(head->next, data);
+	while (head != NULL) {
+		if(head->data == data) {
+			if (head->previous != NULL)
+				head->previous->next = head->next;
+			if (head->next != NULL)
+				head->next->previous = head->previous;
+			free(head);
+			return 1;
+		} else if(head->next == NULL)
+			return 0;
+			
+		head = head->next;
+	}
 }
