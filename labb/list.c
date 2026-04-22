@@ -29,7 +29,9 @@ static Node * create_list_node(const Data data)
 //Returnerar 1 om listan är tom, annars 0
 int is_empty(const List list)
 {
-	
+	if (list == NULL)
+		return 1;
+	return 0;
 }
 
 //Lägg till en nod först i listan
