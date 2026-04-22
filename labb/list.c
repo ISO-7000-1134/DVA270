@@ -42,25 +42,24 @@ void add_first(List *list, const Data data)
 	}
 
 	List head = *list;
+	int listIsHead;
 
 	// Find head
 	while (head->previous != NULL)
 		head = head->previous;
+	listIsHead = head == *list;
 
 	Node* first = create_list_node(data);
 
 	// Check if new node was created
 	if (first != NULL) {
-		// Update list pointer if list was head
-		if (head == *list) {
-			(*list)->previous = first;
-			first->next = *list;
-		} else {
-			head->previous = first;
-			first->next = head;
-		}
+		head->previous = first;
+		first->next = head;
 	} /*else 
 		assert(1);*/
+
+	if (listIsHead)
+		*list = head;
 }
 
 //lägg till nod sist i listan
@@ -73,24 +72,23 @@ void add_last(List *list, const Data data)
 	}
 
 	List tail = *list;
+	int listIsTail;
 
 	// Find tail
 	while (tail->next != NULL)
 		tail = tail->next;
+	listIsTail = tail == *list;
 
 	Node* last = create_list_node(data);
 
 	if (last != NULL) {
-		// Update list pointer if list was head
-		if (tail == *list) {
-			(*list)->next = last;
-			last->previous = *list;
-		} else {
-			tail->next = last;
-			last->previous = tail;
-		}
+		tail->next = last;
+		last->previous = tail;
 	} /*else 
 		assert(1);*/
+		
+	if (listIsTail)
+		*list = tail;
 }
 
 //Ta bort första noden i listan
@@ -148,8 +146,8 @@ void print_list(const List list)
 	char newLine[64] = "\n\r";
 	while (head != NULL)
 	{	
-	send_int(list->data)
-	uarte_write(newLine, strlen(newLine));
+		send_int(head->data);
+		uarte_write(newLine, strlen(newLine));
 		head = head->next; // goes to next node
 	}
 }
