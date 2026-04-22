@@ -29,7 +29,7 @@ static Node * create_list_node(const Data data)
 //Returnerar 1 om listan är tom, annars 0
 int is_empty(const List list)
 {
-
+	
 }
 
 //Lägg till en nod först i listan
@@ -148,7 +148,7 @@ void print_list(const List list)
 	char newLine[64] = "\n\r";
 	while (head != NULL)
 	{	
-	send_int(list->data);
+	send_int(head->data);
 	uarte_write(newLine, strlen(newLine));
 		head = head->next; // goes to next node
 	}
@@ -213,17 +213,17 @@ int search(const List list, const Data data)
 		return 0;
 
 	List head = list;
+	
+	while (head->previous != NULL)
+		head = head->previous;
 
-	// Find head
-	// while (head->previous != NULL)
-	// 	head = head->previous;
-
-	if(head->data == data) {
-		return 1;
-	} else if(head->next == NULL)
-		return 0;
-	else
-		return search(head->next, data);
+	while (head != NULL) {
+		if(head->data == data)
+			return 1;
+		else if(head->next == NULL)
+			return 0;
+		head = head->next;
+	}
 }
 
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
