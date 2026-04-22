@@ -124,7 +124,17 @@ void clear_list(List *head)
 //Skriv ut listan genom UART
 void print_list(const List list)
 {	
-	assert(list != NULL);
+	if (list == NULL) // If list is empty
+		return;
+
+	char dataToPrint[64];
+	sprintf(dataToPrint, sizeof(dataToPrint), "%d\n\r", head->data);
+	uarte_write(dataToPrint, strlen(dataToPrint));
+	head = head->next; // goes to next nod
+
+	print_list(list->next);
+
+	/*assert(list != NULL);
 	if (list == NULL) // If list is empty
 		return;
 
@@ -135,10 +145,10 @@ void print_list(const List list)
 
 	while (head != NULL)
 	{	char dataToPrint[64];
-		sprintf(dataToPrint, sizeof(dataToPrint), "%d\r\n", head->data);
+		sprintf(dataToPrint, sizeof(dataToPrint), "%d\n\r", head->data);
 		uarte_write(dataToPrint, strlen(dataToPrint));
 		head = head->next; // goes to next node
-	}
+	}*/
 }
 
 //returnera första datat i listan
