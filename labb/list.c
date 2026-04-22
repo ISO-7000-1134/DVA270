@@ -19,8 +19,8 @@ static Node * create_list_node(const Data data)
 		newNode->data = data;
 		newNode->next = NULL;
 		newNode->previous = NULL;
-	} else 
-		assert(1);
+	} /*else 
+		assert(1);*/
 
 	return newNode;
 }
@@ -53,8 +53,8 @@ void add_first(List *list, const Data data)
 	if (first != NULL) {
 		head->previous = first;
 		first->next = head;
-	} else 
-		assert(1);
+	} /*else 
+		assert(1);*/
 }
 
 //lägg till nod sist i listan
@@ -77,8 +77,12 @@ void add_last(List *list, const Data data)
 	if (last != NULL) {
 		tail->next = last;
 		last->previous = tail;
-	} else 
-		assert(1);
+	} /*else 
+		assert(1);*/
+		
+	// if list was the head, set it to the new head
+	if (*list->next != NULL)
+		*list = tail;
 }
 
 //Ta bort första noden i listan
