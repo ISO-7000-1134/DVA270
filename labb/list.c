@@ -98,11 +98,15 @@ void add_last(List *list, const Data data)
 void remove_first(List *head)
 {
 	assert(head != NULL); 
-    assert((*head)->next != NULL); 
-    Node* toRemove = head; 
-    if ((*head)->next != NULL) 
-        (*head)->next->previous = (*head)->previous; 
-    free(toRemove); 
+    assert((*head)->next != NULL);
+    while ((*head)->previous != NULL) 
+        *head = (*head)->previous; 
+	List* toRemove = *head;
+	*head = (*head)->next;
+	if (*head != NULL)
+        (*head)->previous = NULL;
+    free(toRemove);
+	
 }
 
 //ta bort sista noden i listan
@@ -113,7 +117,7 @@ void remove_last(List *tail)
     assert((*tail)->next != NULL); 
     Node* toRemove = tail; 
     if ((*tail)->previous != NULL) 
-        (*tail)->previous->next = (*tail)->next; 
+        *tail = (*tail)->next; 
     free(toRemove); 
 }
 
