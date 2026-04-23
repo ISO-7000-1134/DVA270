@@ -166,6 +166,7 @@ void print_list(const List list)
 //precondition: listan är inte tom (testa med assert)
 Data get_first_element(const List list)
 {
+	assert(list != NULL);
 	List head = list;
 
 	//Find head
