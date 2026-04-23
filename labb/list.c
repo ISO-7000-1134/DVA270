@@ -99,6 +99,7 @@ void remove_first(List *head)
 {
 	assert(head != NULL); 
     assert((*head)->next != NULL);
+	// find head
     while ((*head)->previous != NULL) 
         *head = (*head)->previous; 
 	List* toRemove = *head;
@@ -106,7 +107,6 @@ void remove_first(List *head)
 	if (*head != NULL)
         (*head)->previous = NULL;
     free(toRemove);
-	
 }
 
 //ta bort sista noden i listan
@@ -114,10 +114,14 @@ void remove_first(List *head)
 void remove_last(List *tail)
 {
 	assert(tail != NULL); 
-    assert((*tail)->next != NULL); 
-    Node* toRemove = tail; 
-    if ((*tail)->previous != NULL) 
+    assert((*tail)->previous != NULL); 
+	// find tail
+    while ((*tail)->next != NULL) 
         *tail = (*tail)->next; 
+	List* toRemove = *tail;
+	*tail = (*tail)->previous;
+	if (*tail != NULL)
+		(*tail)->next = NULL;
     free(toRemove); 
 }
 
