@@ -235,12 +235,19 @@ int search(const List list, const Data data)
 	}
 }
 
-static int remove_element_from_head(List head, const Data data) {
+static int remove_element_from_head(List head, List* list, const Data data) {
 	if(head->data == data) {
-		if (head->previous != NULL)
+		if (head->previous != NULL) {
 			head->previous->next = head->next;
-		if (head->next != NULL)
+			if (*list == head) // Make sure the list pointer is undisturbed unless it points to the element being removed
+				*list = head->previous;
+		}
+		if (head->next != NULL) {
 			head->next->previous = head->previous;
+			if (*list == head)
+				*list = head->next;
+
+		}
 		free(head);
 		return 1;
 	} else if((*head)->next == NULL)
@@ -253,8 +260,17 @@ static int remove_element_from_head(List head, const Data data) {
 int remove_element(List *list, const Data data)
 {
 	// Empty list
-	if (list == NULL)
+	if (*list == NULL)
 		return 0;
+	
+	// List has only one element
+	if ((*list)->next == NULL && (*list)->previous == NULL) {
+		if ((*list)->data == data) {
+			free(*list);
+			return 1;
+		} else
+			return 0;
+	}
 
 	List head = *list;
 
