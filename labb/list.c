@@ -29,7 +29,9 @@ static Node * create_list_node(const Data data)
 //Returnerar 1 om listan är tom, annars 0
 int is_empty(const List list)
 {
-
+	if (list == NULL)
+		return 1;
+	return 0;
 }
 
 //Lägg till en nod först i listan
@@ -96,11 +98,15 @@ void add_last(List *list, const Data data)
 void remove_first(List *head)
 {
 	assert(head != NULL); 
-    assert((*head)->next != NULL); 
-    Node* toRemove = head; 
-    if ((*head)->next != NULL) 
-        (*head)->next->previous = (*head)->previous; 
-    free(toRemove); 
+    assert((*head)->next != NULL);
+	// find head
+    while ((*head)->previous != NULL) 
+        *head = (*head)->previous; 
+	List* toRemove = *head;
+	*head = (*head)->next;
+	if (*head != NULL)
+        (*head)->previous = NULL;
+    free(toRemove);
 }
 
 //ta bort sista noden i listan
@@ -108,10 +114,14 @@ void remove_first(List *head)
 void remove_last(List *tail)
 {
 	assert(tail != NULL); 
-    assert((*tail)->next != NULL); 
-    Node* toRemove = tail; 
-    if ((*tail)->previous != NULL) 
-        (*tail)->previous->next = (*tail)->next; 
+    assert((*tail)->previous != NULL); 
+	// find tail
+    while ((*tail)->next != NULL) 
+        *tail = (*tail)->next; 
+	List* toRemove = *tail;
+	*tail = (*tail)->previous;
+	if (*tail != NULL)
+		(*tail)->next = NULL;
     free(toRemove); 
 }
 
@@ -156,6 +166,7 @@ void print_list(const List list)
 //precondition: listan är inte tom (testa med assert)
 Data get_first_element(const List list)
 {
+	assert(list != NULL);
 	List head = list;
 
 	//Find head
@@ -211,17 +222,17 @@ int search(const List list, const Data data)
 		return 0;
 
 	List head = list;
+	
+	while (head->previous != NULL)
+		head = head->previous;
 
-	// Find head
-	// while (head->previous != NULL)
-	// 	head = head->previous;
-
-	if(head->data == data) {
-		return 1;
-	} else if(head->next == NULL)
-		return 0;
-	else
-		return search(head->next, data);
+	while (head != NULL) {
+		if(head->data == data)
+			return 1;
+		else if(head->next == NULL)
+			return 0;
+		head = head->next;
+	}
 }
 
 static int remove_element_from_head(List head, const Data data) {
@@ -232,7 +243,7 @@ static int remove_element_from_head(List head, const Data data) {
 			head->next->previous = head->previous;
 		free(head);
 		return 1;
-	} else if(head->next == NULL)
+	} else if((*head)->next == NULL)
 		return 0;
 	
 	remove_element_from_head(head->next, data);
