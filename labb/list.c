@@ -242,18 +242,16 @@ static int remove_element_from_head(List head, List* list, const Data data) {
 			if (*list == head) // Make sure the list pointer is undisturbed unless it points to the element being removed
 				*list = head->previous;
 		}
-		if (head->next != NULL) {
+		if (head->next != NULL) 
 			head->next->previous = head->previous;
-			if (*list == head)
-				*list = head->next;
-
-		}
+		if (*list == head) // Make sure the list pointer is undisturbed unless it points to the element being removed
+			*list = head->next;
 		free(head);
 		return 1;
-	} else if((*head)->next == NULL)
+	} else if(head->next == NULL)
 		return 0;
 	
-	remove_element_from_head(head->next, data);
+	remove_element_from_head(head->next, list, data);
 }
 
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
@@ -262,15 +260,6 @@ int remove_element(List *list, const Data data)
 	// Empty list
 	if (*list == NULL)
 		return 0;
-	
-	// List has only one element
-	if ((*list)->next == NULL && (*list)->previous == NULL) {
-		if ((*list)->data == data) {
-			free(*list);
-			return 1;
-		} else
-			return 0;
-	}
 
 	List head = *list;
 
@@ -278,5 +267,5 @@ int remove_element(List *list, const Data data)
 	while (head->previous != NULL)
 		head = head->previous;
 
-	remove_element_from_head(head, data);
+	remove_element_from_head(head, list, data);
 }
