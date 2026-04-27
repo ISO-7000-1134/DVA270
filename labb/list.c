@@ -215,6 +215,13 @@ int number_of_nodes(const List list)
 }
 
 //Sök efter data i listan, returnera 1 om datat finns, annars 0.
+int search_from_head(const List head, const Data data) {
+	if(head->data == data)
+		return 1;
+	else if(head->next == NULL)
+		return 0;
+	search_from_head(head->next, data);
+}
 int search(const List list, const Data data)
 {	
 	// Check if list is empty
@@ -226,13 +233,7 @@ int search(const List list, const Data data)
 	while (head->previous != NULL)
 		head = head->previous;
 
-	while (head != NULL) {
-		if(head->data == data)
-			return 1;
-		else if(head->next == NULL)
-			return 0;
-		head = head->next;
-	}
+	search_from_head(head, data);
 }
 
 static int remove_element_from_head(List head, List* list, const Data data) {
