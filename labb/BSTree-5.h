@@ -2,6 +2,7 @@
 #define BSTREE_H
 
 #include <nrfx.h>
+#include <stdlib.h>
 
 /*******************************************************/
 /* DVA270 - Interface för binärt sökträd               */

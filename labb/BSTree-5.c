@@ -9,13 +9,13 @@
 /* Skapar en trädnod med det givna datat. Denna funktion bör vara den enda som använder malloc för att skapa en ny treeNode*/
 static struct treeNode* create_tree_node(int data)
 {
-    BSTree* newNode = (BSTree*)malloc(sizeof(BSTree));
+    struct treeNode* newNode = (struct treeNode*)malloc(sizeof(struct treeNode));
 
     if (newNode != NULL)
     {
-        (*newNode)->data = data;
-        (*newNode)->left = NULL;
-        (*newNode)->right = NULL;
+        newNode->data = data;
+        newNode->left = NULL;
+        newNode->right = NULL;
     }else
         return NULL;
 
@@ -63,6 +63,18 @@ void insert_sorted(BSTree* tree, int data)
     I vanliga fall kan man lösa dubletter på olika sätt. Eftersom vi vill att era lösningar
     fungerar likadant inför examinationen så bestämmer jag att dubletter ej ska tillåtas i trädet.
     Post-condition kan verifieras med hjälp av find(...)*/
+    if (*tree == NULL)
+    {
+        *tree = create_tree_node(data);
+        return;
+    }
+
+    if ((*tree)->data == data) // ignorera dubletter
+        return;
+    else if ((*tree)->data < data)
+        insert_sorted(&((*tree)->right), data);
+    else
+        insert_sorted(&((*tree)->left), data);
 }
 
 /* Utskriftsfunktioner
@@ -74,7 +86,7 @@ void print_preorder(const BSTree tree)
 
 void print_inorder(const BSTree tree)
 {
-
+    
 }
 
 void print_postorder(const BSTree tree)
@@ -86,7 +98,16 @@ void print_postorder(const BSTree tree)
 int find(const BSTree tree, int data)
 {
     // Tänk pa att trädet kan vara tomt
-
+    if (tree == NULL)
+        return 0;
+    else if (tree->data == data)
+        return 1;   
+    else{
+        if (tree->data < data)
+            return find(tree->right, data);
+        else
+            return find(tree->left, data);
+    }
 }
 
 /* Tar bort 'data' från trädet om det finns */
