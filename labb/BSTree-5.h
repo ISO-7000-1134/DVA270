@@ -30,7 +30,7 @@ void insert_sorted(BSTree* tree, int data);
 
 /* Utskriftsfunktioner*/
 void print_preorder(const BSTree tree);
-void print_inorder(const BSTree tree);x
+void print_inorder(const BSTree tree);
 void print_postorder(const BSTree tree);
 
 /* Returnerar 1 om 'data' finns i tree, 0 annars */

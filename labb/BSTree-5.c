@@ -1,5 +1,6 @@
 #include <assert.h>
-#include "BSTree.h"
+#include "BSTree-5.h"
+#include "labb-1.h"
 
 /*Det är helt tillåtet att lägga till egna hjälpfunktioner men de befintliga funktionerna ska implementeras enligt instruktionerna*/
 
@@ -8,7 +9,17 @@
 /* Skapar en trädnod med det givna datat. Denna funktion bör vara den enda som använder malloc för att skapa en ny treeNode*/
 static struct treeNode* create_tree_node(int data)
 {
+    BSTree* newNode = (BSTree*)malloc(sizeof(BSTree));
 
+    if (newNode != NULL)
+    {
+        (*newNode)->data = data;
+        (*newNode)->left = NULL;
+        (*newNode)->right = NULL;
+    }else
+        return NULL;
+
+    return newNode;
 }
 
 /* Returnerar en dynamiskt allokerad array som innehåller trädets data sorterat */
