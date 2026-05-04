@@ -83,7 +83,15 @@ void insert_sorted(BSTree* tree, int data)
 Det räcker att ni implementerar LR-ordningarna*/
 void print_preorder(const BSTree tree)
 {
+    if (tree == NULL)
+        return;
 
+    char newLine[] = "\r\n";
+    send_int(tree->data);
+    uarte_write(&newLine, strlen(newLine));
+    print_preorder(tree->left);
+    print_preorder(tree->right);
+    
 }
 
 void print_inorder(const BSTree tree)
