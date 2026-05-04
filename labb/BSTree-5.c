@@ -53,7 +53,9 @@ BSTree create_empty_tree(void)
 /* Returnerar 1 ifall trädet är tomt, 0 annars */
 int is_empty(const BSTree tree)
 {
-
+    if (tree == NULL)
+        return 1;
+    return 0;
 }
 
 /* Sätter in 'data' sorterat i *tree */
