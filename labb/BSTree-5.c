@@ -78,8 +78,8 @@ static void build_tree_sorted_from_array(BSTree* tree, const int arr[], int size
     else 
         return;
 
-    build_tree_sorted_from_array(tree->left, arr, size / 2);
-    build_tree_sorted_from_array(tree->right, arr + (size / 2) + 1, size - (size / 2) - 1);
+    build_tree_sorted_from_array((*tree)->left, arr, size / 2);
+    build_tree_sorted_from_array((*tree)->right, arr + (size / 2) + 1, size - (size / 2) - 1);
 }
 
 /* Implementation av trädet, funktionerna i interfacet */
