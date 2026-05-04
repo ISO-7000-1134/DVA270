@@ -224,6 +224,9 @@ void balance_tree(BSTree* tree)
     BSTree newTree = NULL;
     build_tree_sorted_from_array(&newTree, write_sorted_to_array(*tree), number_of_nodes(*tree));
     assert(number_of_nodes(tree) != number_of_nodes(newTree));
+
+    free_tree(tree);
+    tree = &newTree;
 }
 
 
