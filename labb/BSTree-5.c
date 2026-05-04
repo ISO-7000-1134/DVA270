@@ -22,6 +22,21 @@ static struct treeNode* create_tree_node(int data)
     return newNode;
 }
 
+static void write_in_ordering_to_array(int* arr, int arrLen, const BSTree tree) {
+    if(tree == NULL)
+        return;
+
+    if(tree->left != NULL);
+        write_in_ordering_to_array(arr, tree->left);
+
+    arr = (int*)realloc(arr, ++arrLen);
+    if (arr != NULL)
+        arr[arrLen - 1] = tree->data;
+
+    if(tree->right != NULL);
+        write_in_ordering_to_array(arr, tree->right);
+}
+
 /* Returnerar en dynamiskt allokerad array som innehåller trädets data sorterat */
 static int* write_sorted_to_array(const BSTree tree)
 {
@@ -30,7 +45,13 @@ static int* write_sorted_to_array(const BSTree tree)
     Skriv datat från trädet sorterat till arrayen (minsta till största)
        - till detta kanske du behöver en hjälpfunktion */
     
+    if(tree == NULL)
+        return NULL;
 
+    int* arr = NULL;
+    write_in_ordering_to_array(arr, 0, tree);
+
+    return arr;
 }
 
 /* Bygger upp ett sorterat, balanserat träd från en sorterad array */
@@ -40,6 +61,16 @@ static void build_tree_sorted_from_array(BSTree* tree, const int arr[], int size
     Mittenelementet i en delarray skapar rot i delträdet
     Vänster delarray bygger vänster delträd
     Höger delarray bygger höger delträd*/
+
+    if (tree == NULL) 
+        tree = (BSTree*)malloc(sizeof(BSTree));
+    if (tree == NULL) return;
+    if (size == 0) return;
+
+    *tree = create_tree_node(arr[size / 2]);
+
+    build_tree_sorted_from_array(tree->left, arr, size / 2);
+    build_tree_sorted_from_array(tree->right, arr + (size / 2) + 1, size - (size / 2) - 1);
 }
 
 /* Implementation av trädet, funktionerna i interfacet */
