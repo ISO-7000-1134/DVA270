@@ -114,7 +114,15 @@ void insert_sorted(BSTree* tree, int data)
 Det räcker att ni implementerar LR-ordningarna*/
 void print_preorder(const BSTree tree)
 {
+    if (tree == NULL)
+        return;
 
+    char newLine[] = "\r\n";
+    send_int(tree->data);
+    uarte_write(&newLine, strlen(newLine));
+    print_preorder(tree->left);
+    print_preorder(tree->right);
+    
 }
 
 void print_inorder(const BSTree tree)
@@ -132,7 +140,14 @@ void print_inorder(const BSTree tree)
 
 void print_postorder(const BSTree tree)
 {
+    if (tree == NULL)
+        return;
 
+    char newLine[] = "\r\n";
+    print_postorder(tree->left);
+    print_postorder(tree->right);
+    send_int(tree->data);
+    uarte_write(&newLine, strlen(newLine));
 }
 
 /* Returnerar 1 om 'data' finns i tree, 0 annars */
@@ -163,7 +178,10 @@ void remove_element(BSTree* tree, int data)
 /* Returnerar hur många noder som totalt finns i trädet */
 int number_of_nodes(const BSTree tree)
 {
-
+    int numberOfNodes = 0;
+    if (tree != NULL)
+        numberOfNodes = 1 + number_of_nodes(tree->left) + number_of_nodes(tree->right);
+    return numberOfNodes;
 }
 
 /* Returnerar hur djupt trädet är */
