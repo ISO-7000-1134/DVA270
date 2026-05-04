@@ -255,7 +255,13 @@ void balance_tree(BSTree* tree)
 /* Töm trädet och frigör minnet för de olika noderna */
 void free_tree(BSTree* tree)
 {
+    if (is_empty(*tree))
+        return;
 
+    free_tree(&((*tree)->left));
+    free_tree(&((*tree)->right));
+    free(*tree);
+    *tree = NULL;
 }
 
 
