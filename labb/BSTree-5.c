@@ -88,6 +88,14 @@ void print_preorder(const BSTree tree)
 
 void print_inorder(const BSTree tree)
 {
+    if (tree == NULL)
+        return;
+
+    char newLine[] = "\r\n";
+    print_inorder(tree->left);
+    send_int(tree->data);
+    uarte_write(&newLine, strlen(newLine));
+    print_inorder(tree->right);
     
 }
 
