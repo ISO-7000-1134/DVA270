@@ -196,6 +196,9 @@ int number_of_nodes(const BSTree tree)
 /* Returnerar hur djupt trädet är */
 int depth(const BSTree tree)
 {
+    if (tree == NULL)
+        return 0;
+
     int left_depth = depth(tree->left);
     int right_depth = depth(tree->right);
 
@@ -209,6 +212,9 @@ int depth(const BSTree tree)
 Se math.h för användbara funktioner*/
 int min_depth(const BSTree tree)
 {
+    if (tree == NULL)
+        return 0;
+    
     int left_depth = min_depth(tree->left);
     int right_depth = min_depth(tree->right);
 
