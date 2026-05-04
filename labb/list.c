@@ -97,8 +97,11 @@ void add_last(List *list, const Data data)
 //precondition: listan är inte tom (testa med assert)
 void remove_first(List *head)
 {
-	assert(head != NULL); 
-    assert((*head)->next != NULL);
+	if (*head == NULL)
+		return;
+
+	//assert(head != NULL); 
+    //assert((*head)->next != NULL);
 	// find head
     while ((*head)->previous != NULL) 
         *head = (*head)->previous; 
@@ -113,8 +116,11 @@ void remove_first(List *head)
 //precondition: listan är inte tom (testa med assert)
 void remove_last(List *tail)
 {
-	assert(tail != NULL); 
-    assert((*tail)->previous != NULL); 
+	if (*tail == NULL)
+		return;
+
+	//assert(tail != NULL); 
+    //assert((*tail)->previous != NULL); 
 	// find tail
     while ((*tail)->next != NULL) 
         *tail = (*tail)->next; 
@@ -166,7 +172,7 @@ void print_list(const List list)
 //precondition: listan är inte tom (testa med assert)
 Data get_first_element(const List list)
 {
-	assert(list != NULL);
+	//assert(list != NULL);
 	List head = list;
 
 	//Find head
