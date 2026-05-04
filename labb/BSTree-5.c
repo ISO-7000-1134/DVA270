@@ -147,7 +147,10 @@ void remove_element(BSTree* tree, int data)
 /* Returnerar hur många noder som totalt finns i trädet */
 int number_of_nodes(const BSTree tree)
 {
-
+    int numberOfNodes = 0;
+    if (tree != NULL)
+        numberOfNodes = 1 + number_of_nodes(tree->left) + number_of_nodes(tree->right);
+    return numberOfNodes;
 }
 
 /* Returnerar hur djupt trädet är */
