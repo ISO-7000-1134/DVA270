@@ -22,19 +22,21 @@ static struct treeNode* create_tree_node(int data)
     return newNode;
 }
 
-static void write_in_ordering_to_array(int* arr, int arrLen, const BSTree tree) {
+static void write_in_ordering_to_array(int* arr, int* arrLen, const BSTree tree) {
     if(tree == NULL)
         return;
 
     if(tree->left != NULL);
-        write_in_ordering_to_array(arr, tree->left);
+        write_in_ordering_to_array(arr, arrLen, tree->left);
 
-    arr = (int*)realloc(arr, ++arrLen);
-    if (arr != NULL)
-        arr[arrLen - 1] = tree->data;
+    arr = (int*)realloc(arr, *arrLen + 1);
+    if (arr != NULL) {
+        arr[*arrLen] = tree->data;
+        *arrLen = *arrLen + 1;
+    }
 
     if(tree->right != NULL);
-        write_in_ordering_to_array(arr, tree->right);
+        write_in_ordering_to_array(arr, arrLen, tree->right);
 }
 
 /* Returnerar en dynamiskt allokerad array som innehåller trädets data sorterat */
@@ -49,7 +51,10 @@ static int* write_sorted_to_array(const BSTree tree)
         return NULL;
 
     int* arr = NULL;
-    write_in_ordering_to_array(arr, 0, tree);
+    int size = 0;
+    write_in_ordering_to_array(arr, &size, tree);
+
+    assert(size != number_of_nodes(tree));
 
     return arr;
 }
@@ -67,7 +72,11 @@ static void build_tree_sorted_from_array(BSTree* tree, const int arr[], int size
     if (tree == NULL) return;
     if (size == 0) return;
 
-    *tree = create_tree_node(arr[size / 2]);
+    BSTree node = create_tree_node(arr[size / 2]);
+    if (node != NULL)
+        *tree = node;
+    else 
+        return;
 
     build_tree_sorted_from_array(tree->left, arr, size / 2);
     build_tree_sorted_from_array(tree->right, arr + (size / 2) + 1, size - (size / 2) - 1);
@@ -200,16 +209,21 @@ int min_depth(const BSTree tree)
 /* Balansera trädet så att depth(tree) == minDepth(tree) */
 void balance_tree(BSTree* tree)
 {
-/* Förslag på algoritm:
-- överfor trädet till en dynamiskt allokerad array med writeSortedToArray()
-- töm trädet med freeTree()
-- bygg upp trädet rekursivt från arrayen med buildTreeSortedFromArray()
-- frigör minne för den dynamiskt allokerade arrayen
+    /* Förslag på algoritm:
+    - överfor trädet till en dynamiskt allokerad array med writeSortedToArray()
+    - töm trädet med freeTree()
+    - bygg upp trädet rekursivt från arrayen med buildTreeSortedFromArray()
+    - frigör minne för den dynamiskt allokerade arrayen
 
+    Post-conditions:
+    - tree har lika många noder som tidigare
+    - djupet för trädet är samma som minimumdjupet för trädet */
 
-Post-conditions:
-- tree har lika många noder som tidigare
-  - djupet för trädet är samma som minimumdjupet för trädet */
+    if (tree == NULL) return;
+
+    BSTree newTree = NULL;
+    build_tree_sorted_from_array(&newTree, write_sorted_to_array(*tree), number_of_nodes(*tree));
+    assert(number_of_nodes(tree) != number_of_nodes(newTree));
 }
 
 
