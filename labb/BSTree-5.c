@@ -109,7 +109,14 @@ void print_inorder(const BSTree tree)
 
 void print_postorder(const BSTree tree)
 {
+    if (tree == NULL)
+        return;
 
+    char newLine[] = "\r\n";
+    print_postorder(tree->left);
+    print_postorder(tree->right);
+    send_int(tree->data);
+    uarte_write(&newLine, strlen(newLine));
 }
 
 /* Returnerar 1 om 'data' finns i tree, 0 annars */
