@@ -6,13 +6,14 @@
 // Initiera hashtabellen genom att sätta alla pekare till NULL
 void initTable(HashTable* ht)
 {
-
+    for (int i = 0; i < TABLE_SIZE; i++) 
+        ht->table[i] = NULL
 }
 
 // Enkel hashfunktion som beräknar en position i arrayen beroende på key
 int hash(int key)
 {
-    
+    return key % TABLE_SIZE
 }
 
 
