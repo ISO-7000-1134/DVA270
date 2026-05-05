@@ -175,6 +175,14 @@ int find(const BSTree tree, int data)
     }
 }
 
+// hjälpfunktion för remove_element
+int find_min_value(BSTree tree)
+{
+    while(tree != NULL && tree->left != NULL)
+        tree = tree->left;
+    return tree->data;
+}
+
 /* Tar bort 'data' från trädet om det finns */
 void remove_element(BSTree* tree, int data)
 {
@@ -182,6 +190,43 @@ void remove_element(BSTree* tree, int data)
     Tre fall: Ett löv (inga barn), ett barn (vänster eller höger), två barn
     
     Glöm inte att frigöra noden när den länkats ur trädet'*/
+
+    if (*tree == NULL)
+        return;
+
+    if (data < (*tree)->data)
+        remove_element(&(*tree)->left, data);
+    else if (data > (*tree)->data)
+        remove_element(&(*tree)->right, data);
+    else
+    {
+        if ((*tree)->left == NULL && (*tree)->right == NULL)
+        {
+            free(*tree);
+            *tree = NULL;
+        }
+        else if ((*tree)->left == NULL)
+        {
+            BSTree temp = *tree;
+            *tree = (*tree)->right;
+            free(temp);
+        }
+        else if ((*tree)->right == NULL)
+        {
+            BSTree temp = *tree;
+            *tree = (*tree)->left;
+            free(temp);
+        }
+        else
+        {
+            int min_value =  find_min_value((*tree)->right);
+            (*tree)->data = min_value;
+            // BSTree* temp = find_min_value((*tree)->right);
+            // (*tree)->data = temp->data;
+            remove_element(&((*tree)->right), (*tree)->data);
+        }
+    }
+
 }
 
 /* Returnerar hur många noder som totalt finns i trädet */
