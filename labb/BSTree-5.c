@@ -197,7 +197,7 @@ void remove_element(BSTree* tree, int data)
     if (data < (*tree)->data)
         remove_element(&(*tree)->left, data);
     else if (data > (*tree)->data)
-        remove_element(&(*tree)->right, data);
+        remove_element(& (*tree)->right, data);
     else
     {
         if ((*tree)->left == NULL && (*tree)->right == NULL)
@@ -221,8 +221,6 @@ void remove_element(BSTree* tree, int data)
         {
             int min_value =  find_min_value((*tree)->right);
             (*tree)->data = min_value;
-            // BSTree* temp = find_min_value((*tree)->right);
-            // (*tree)->data = temp->data;
             remove_element(&((*tree)->right), (*tree)->data);
         }
     }
