@@ -3,6 +3,7 @@
 #include <string.h>
 #include "hashtable.h"
 #include "list.h"
+#include "labb-1.h"
 
 // Initiera hashtabellen genom att sätta alla pekare till NULL
 void initTable(HashTable* ht)
@@ -93,7 +94,25 @@ int removeKey(HashTable* ht, int key)
 }
 
 // Debugfunktion som skriver ut allt som finns i tabellen
+#define BUCKET_STRING_BUFFER_SIZE
 void printTable(HashTable* ht)
 {
+    if (ht == NULL) {
+        sprintf(strBuffer, "no hash table found\n\r");
+        uarte_write(strBuffer, strlen(strBuffer))
+    }
 
+    char strBuffer[BUCKET_STRING_BUFFER_SIZE];
+    Node* node;
+    
+    for (int i = 0; i < TABLE_SIZE, i++) {
+        sprintf(strBuffer, "\n\rid: %d\n\r", i);
+        uarte_write(strBuffer, strlen(strBuffer));
+
+        node = ht->table[i];
+        while(node != NULL) {
+            sprintf(strBuffer, "    key: %d, value: %s\n\r", node->data.key, node->data.value);
+            uarte_write(strBuffer, strlen(strBuffer));
+        }
+    }
 }
