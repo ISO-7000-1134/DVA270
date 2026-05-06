@@ -98,7 +98,7 @@ int removeKey(HashTable* ht, int key)
 void printTable(HashTable* ht)
 {
     if (ht == NULL) {
-        sprintf(strBuffer, "no hash table found\n\r");
+        sprintf(strBuffer, "no hash table found.\n\r");
         uarte_write(strBuffer, strlen(strBuffer))
     }
 
