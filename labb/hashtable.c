@@ -54,6 +54,15 @@ char* get(HashTable* ht, int key)
     // 2. Traversera listan
     // 3. Returnera value om hittad, annars NULL
 
+    int index = hash(key);
+    Node* current = ht->table[index];
+    while (current != NULL)
+    {
+        if (current->data.key == key) 
+            return current->data.value;
+        current = current->next;
+    }
+
     return NULL;
 }
 
@@ -66,6 +75,20 @@ int removeKey(HashTable* ht, int key)
     // 3. Frigör minne
     // 4. Returnera 1 om borttagen, annars 0
 
+    int index = hash(key);
+    Node* current = ht->table[index];
+    Node** previous_next_ptr = &(ht->table[index]);
+    while (current != NULL)
+    {
+        if (current->data.key == key) {
+            *previous_next_ptr = current->next;
+            free(current)
+            return 1;
+        }
+        previous_next_ptr = &(current->next);
+        current = current->next;
+    }
+    
     return 0;
 }
 
