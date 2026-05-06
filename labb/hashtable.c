@@ -3,6 +3,7 @@
 #include <string.h>
 #include "hashtable.h"
 #include "list.h"
+#include "labb-1.h"
 
 // Initiera hashtabellen genom att sätta alla pekare till NULL
 void initTable(HashTable* ht)
@@ -17,9 +18,6 @@ int hash(int key)
     return key % TABLE_SIZE;
 }
 
-// Från labb 2
-
-// labb 3
 
 // Insert
 void insert(HashTable* ht, int key, const char* value)
@@ -41,8 +39,8 @@ void insert(HashTable* ht, int key, const char* value)
         current = current->next;
     }
     // 3. Annars: lägg till ny nod (förslagsvis i början)
-    add_first(&((*ht).table[index]), (Bucket){.key = key, .value = ""});
-    Node* newNode = (*ht).table[index];
+    add_first(&(ht->table[index]), (Bucket){.key = key, .value = ""});
+    Node* newNode = ht->table[index];
     strcpy(newNode->data.value, value);
 }
 
@@ -71,6 +69,14 @@ int removeKey(HashTable* ht, int key)
 
 // Debugfunktion som skriver ut allt som finns i tabellen
 void printTable(HashTable* ht)
-{
-
+{   
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        char buffer[32];
+        sprintf(buffer, "Index %d: ", i);
+        uarte_write(buffer, strlen(buffer));
+        Node* current = ht->table[i];
+        print_list(current);
+        uarte_write("\r\n", strlen("\r\n"));
+    }
 }
