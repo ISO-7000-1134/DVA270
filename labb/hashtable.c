@@ -2,29 +2,48 @@
 #include <stdlib.h>
 #include <string.h>
 #include "hashtable.h"
+#include "list.h"
 
 // Initiera hashtabellen genom att sätta alla pekare till NULL
 void initTable(HashTable* ht)
 {
     for (int i = 0; i < TABLE_SIZE; i++) 
-        ht->table[i] = NULL
+        ht->table[i] = NULL;
 }
 
 // Enkel hashfunktion som beräknar en position i arrayen beroende på key
 int hash(int key)
 {
-    return key % TABLE_SIZE
+    return key % TABLE_SIZE;
 }
 
+// Från labb 2
+
+// labb 3
 
 // Insert
 void insert(HashTable* ht, int key, const char* value)
 {
     // TODO:
     // 1. Beräkna index
+    int index = hash(key);
     // 2. Gå igenom listan
     //    - Om key finns: uppdatera value
+    Node* current = (*ht).table[index];
+    while (current != NULL)
+    {
+        if (current->data.key == key) // om key finns
+        {
+            // free(current->data.value);
+            strcpy(current->data.value, value);
+            return;
+        }
+        current = current->next;
+    }
     // 3. Annars: lägg till ny nod (förslagsvis i början)
+    add_first(&((*ht).table[index]), (Bucket){.key = key, .value = ""});
+    Node* newNode = (*ht).table[index];
+    strcpy(newNode->data.value, value);
 }
 
 // Get
