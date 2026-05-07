@@ -15,7 +15,7 @@ void initTable(HashTable* ht)
 // Enkel hashfunktion som beräknar en position i arrayen beroende på key
 int hash(int key)
 {
-    return key % TABLE_SIZE;
+    return (TABLE_SIZE * 2 + key) % TABLE_SIZE;
 }
 
 // Från labb 2
@@ -25,26 +25,53 @@ int hash(int key)
 // Insert
 void insert(HashTable* ht, int key, const char* value)
 {
-    // TODO:
-    // 1. Beräkna index
+    // // TODO:
+    // // 1. Beräkna index
+    // int index = hash(key);
+    // // 2. Gå igenom listan
+    // //    - Om key finns: uppdatera value
+    // Node* current = (*ht).table[index];
+    // while (current != NULL)
+    // {
+    //     if (current->data.key == key) // om key finns
+    //     {
+    //         // free(current->data.value);
+    //         strcpy(current->data.value, value);
+    //         return;
+    //     }
+    //     current = current->next;
+    // }
+    // // 3. Annars: lägg till ny nod (förslagsvis i början)
+    // add_first(&((*ht).table[index]), (Bucket){.key = key, .value = ""});
+    // Node* newNode = (*ht).table[index];
+    // strcpy(newNode->data.value, value);
+    
     int index = hash(key);
-    // 2. Gå igenom listan
-    //    - Om key finns: uppdatera value
-    Node* current = (*ht).table[index];
+    Node* current = ht->table[index];
+    Node** previous_next_ptr = &(ht->table[index]);
     while (current != NULL)
     {
-        if (current->data.key == key) // om key finns
-        {
-            // free(current->data.value);
+        if (current->data.key == key) {
             strcpy(current->data.value, value);
             return;
         }
+        previous_next_ptr = &(current->next);
         current = current->next;
     }
-    // 3. Annars: lägg till ny nod (förslagsvis i början)
-    add_first(&((*ht).table[index]), (Bucket){.key = key, .value = ""});
-    Node* newNode = (*ht).table[index];
-    strcpy(newNode->data.value, value);
+
+    current = (Node*)malloc(sizeof(Node));
+
+    if (current == NULL)
+        return;
+
+    Bucket data;
+    data.key = key;
+    strcpy(data.value, value);
+
+    current->data = data;
+    current->next = NULL;
+    
+    *previous_next_ptr = current;    
 }
 
 // Get
@@ -83,7 +110,7 @@ int removeKey(HashTable* ht, int key)
     {
         if (current->data.key == key) {
             *previous_next_ptr = current->next;
-            free(current)
+            free(current);
             return 1;
         }
         previous_next_ptr = &(current->next);
@@ -94,18 +121,18 @@ int removeKey(HashTable* ht, int key)
 }
 
 // Debugfunktion som skriver ut allt som finns i tabellen
-#define BUCKET_STRING_BUFFER_SIZE
+#define BUCKET_STRING_BUFFER_SIZE 64
 void printTable(HashTable* ht)
 {
-    if (ht == NULL) {
-        sprintf(strBuffer, "no hash table found.\n\r");
-        uarte_write(strBuffer, strlen(strBuffer))
-    }
-
     char strBuffer[BUCKET_STRING_BUFFER_SIZE];
     Node* node;
-    
-    for (int i = 0; i < TABLE_SIZE, i++) {
+
+    if (ht == NULL) {
+        sprintf(strBuffer, "no hash table found.\n\r");
+        uarte_write(strBuffer, strlen(strBuffer));
+    }
+
+    for (int i = 0; i < TABLE_SIZE; i++) {
         sprintf(strBuffer, "\n\rid: %d\n\r", i);
         uarte_write(strBuffer, strlen(strBuffer));
 
@@ -113,6 +140,7 @@ void printTable(HashTable* ht)
         while(node != NULL) {
             sprintf(strBuffer, "    key: %d, value: %s\n\r", node->data.key, node->data.value);
             uarte_write(strBuffer, strlen(strBuffer));
+            node = node->next;
         }
     }
 }
