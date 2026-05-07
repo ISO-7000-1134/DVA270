@@ -1,6 +1,6 @@
 #include "list.h"
 #include "labb-1.h"
-
+#include "hashtable.h"
 
 //Returnera en tom lista - funktionen är färdig
 List create_empty_list(void)
@@ -153,19 +153,18 @@ void clear_list(List *head)
 //Skriv ut listan genom UART
 void print_list(const List list)
 {	
-	assert(list != NULL);
+	//assert(list != NULL);
 	if (list == NULL) // If list is empty
 		return;
 
 	List head = list;
-	// Find head
-	// while (head->previous != NULL)
-	// 	head = head->previous;
 
 	char newLine[64] = "\n\r";
 	while (head != NULL)
 	{	
-		uarte_write(head->data.value, strlen(head->data.value));
+		char buffer[32];
+		sprintf(buffer, "(%d, %s)", head->data.key, head->data.value);
+		uarte_write(buffer, sizeof(buffer));
 		uarte_write(newLine, strlen(newLine));
 		head = head->next; // goes to next node
 	}

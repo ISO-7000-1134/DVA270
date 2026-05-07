@@ -4,6 +4,7 @@
 #include "hashtable.h"
 #include "list.h"
 #include "labb-1.h"
+#include "labb-1.h"
 
 // Initiera hashtabellen genom att sätta alla pekare till NULL
 void initTable(HashTable* ht)
@@ -18,9 +19,6 @@ int hash(int key)
     return (TABLE_SIZE * 2 + key) % TABLE_SIZE;
 }
 
-// Från labb 2
-
-// labb 3
 
 // Insert
 void insert(HashTable* ht, int key, const char* value)

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "hashtable.h"
+#include"labb-1.h"
 
 /*******************************************************/
 /* DVA270 - Interface för dubbellänkad lista           */
