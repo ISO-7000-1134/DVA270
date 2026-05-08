@@ -29,11 +29,8 @@ static void write_in_ordering_to_array(int* arr, int* arrLen, const BSTree tree)
     if(tree->left != NULL);
         write_in_ordering_to_array(arr, arrLen, tree->left);
 
-    arr = (int*)realloc(arr, *arrLen + 1);
-    if (arr != NULL) {
-        arr[*arrLen] = tree->data;
-        *arrLen = *arrLen + 1;
-    }
+    arr[*arrLen] = tree->data;
+    *arrLen = *arrLen + 1;
 
     if(tree->right != NULL);
         write_in_ordering_to_array(arr, arrLen, tree->right);
@@ -50,11 +47,13 @@ static int* write_sorted_to_array(const BSTree tree)
     if(tree == NULL)
         return NULL;
 
-    int* arr = NULL;
-    int size = 0;
-    write_in_ordering_to_array(arr, &size, tree);
+    int* arr = (int*)malloc(sizeof(int) * number_of_nodes(tree));
+    int index = 0;
+    
+    if (arr == NULL) 
+        return NULL;
 
-    assert(size != number_of_nodes(tree));
+    write_in_ordering_to_array(arr, &index, tree);
 
     return arr;
 }
@@ -67,19 +66,17 @@ static void build_tree_sorted_from_array(BSTree* tree, const int arr[], int size
     Vänster delarray bygger vänster delträd
     Höger delarray bygger höger delträd*/
 
-    if (tree == NULL) 
-        tree = (BSTree*)malloc(sizeof(BSTree));
-    if (tree == NULL) return;
     if (size == 0) return;
+    if (tree == NULL) return;
 
     BSTree node = create_tree_node(arr[size / 2]);
-    if (node != NULL)
-        *tree = node;
-    else 
+    if (node == NULL)
         return;
+    
+    *tree = node;
 
-    build_tree_sorted_from_array((*tree)->left, arr, size / 2);
-    build_tree_sorted_from_array((*tree)->right, arr + (size / 2) + 1, size - (size / 2) - 1);
+    build_tree_sorted_from_array(&((*tree)->left), arr, size / 2);
+    build_tree_sorted_from_array(&((*tree)->right), &(arr[size / 2 + 1]), size - (size / 2) - 1);
 }
 
 /* Implementation av trädet, funktionerna i interfacet */
@@ -282,16 +279,13 @@ void balance_tree(BSTree* tree)
 
     if (tree == NULL) return;
 
-    BSTree newTree = NULL;
+    int size = number_of_nodes(*tree);
     int* arr = write_sorted_to_array(*tree);
-    build_tree_sorted_from_array(&newTree, arr, number_of_nodes(*tree));
-    free(arr);
-    
-    assert(number_of_nodes(tree) != number_of_nodes(newTree));
-    assert(min_depth(newTree) != depth(newTree));
 
     free_tree(tree);
-    tree = &newTree;
+    build_tree_sorted_from_array(tree, arr, size);
+
+    free(arr);
 }
 
 
