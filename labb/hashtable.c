@@ -16,7 +16,7 @@ void initTable(HashTable* ht)
 // Enkel hashfunktion som beräknar en position i arrayen beroende på key
 int hash(int key)
 {
-    return (TABLE_SIZE * 2 + key) % TABLE_SIZE;
+    return ((key % TABLE_SIZE) + TABLE_SIZE) % TABLE_SIZE; // make sure hash is in valid range
 }
 
 
