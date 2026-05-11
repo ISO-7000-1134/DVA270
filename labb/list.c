@@ -2,6 +2,7 @@
 #include "labb-1.h"
 
 
+
 //Returnera en tom lista - funktionen är färdig
 List create_empty_list(void)
 {
@@ -280,13 +281,16 @@ int remove_element(List *list, const Data data)
 
 // Lab3 del 2
 List random_linked_list(int size)
-{
-
+{	 
+	List list = NULL;
+	for (int i = 0; i < size; i++)
+		add_last(&list, rand() % 10 + 1);
+	return list;
 }
 
 int random_array(int size)
-{
-	
+{ 
+
 }
 
 int is_sorted_helper(List list)
