@@ -86,7 +86,7 @@ int remove_element(List *list, const Data data);
 
 // Lab3 del 2
 List random_linked_list(int size);
-int random_array(int size);
+void random_array(int array[], int size);
 int is_sorted(List list);
 
 void bubble_sort(List *list);

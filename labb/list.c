@@ -288,9 +288,10 @@ List random_linked_list(int size)
 	return list;
 }
 
-int random_array(int size)
+void random_array(int array[], int size)
 { 
-
+	for (int i = 0; i < size; i++)
+		array[i] = rand() % 10 + 1;
 }
 
 int is_sorted_helper(List list)
