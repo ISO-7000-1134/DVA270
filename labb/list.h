@@ -85,7 +85,7 @@ int search(const List list, const Data data);
 int remove_element(List *list, const Data data);
 
 // Lab3 del 2
-int is_sorted(const List list);
+int is_sorted(List list);
 void bubble_sort(List *list);
 
 

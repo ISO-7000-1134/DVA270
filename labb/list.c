@@ -150,7 +150,7 @@ void clear_list(List *head)
 //Skriv ut listan genom UART
 void print_list(const List list)
 {	
-	assert(list != NULL);
+	// assert(list != NULL);
 	if (list == NULL) // If list is empty
 		return;
 
@@ -279,12 +279,29 @@ int remove_element(List *list, const Data data)
 }
 
 // Lab3 del 2
-int is_sorted(const List list)
+int is_sorted_helper(List list)
 {
+	List current = list;
+
+	if (current == NULL || current->next == NULL)
+		return 1;
+	else if (current->data > current->next->data)
+		return 0;
+
+	is_sorted_helper(current->next);
+}
+
+int is_sorted(List list)
+{
+	// find head
+	while (list->previous != NULL)
+		list = list->previous;
+
+	return is_sorted_helper(list);
 
 }
 
 void bubble_sort(List *list)
 {
-	
+
 }
