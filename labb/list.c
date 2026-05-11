@@ -326,7 +326,52 @@ int is_sorted_array(int array[], int size)
 	return 1;
 }
 
-void bubble_sort(List *list)
+void swap_nodes(List* list, Node* first)
 {
+	if (first == NULL || first->next == NULL)
+		return ;
 
+	Node* next = first->next;
+
+	// Koppla om länkarna mellan first och next
+	first->next = next->next;
+	next->next = first;
+
+	next->previous = first->previous;
+	first->previous = next;
+
+	if (first->previous != NULL)
+		next->previous->next = next;
+	else
+		*list = next; // uppdaterar HEAD
+
+	if (first->next != NULL)
+		first->next->previous = first;
+
+}
+
+void bubble_sort(List *list)
+{	
+	if (*list == NULL)
+		return;
+
+	int swapped; // antarlistan redan är sorterad
+
+	do // sorterar så länge man gjort en swap
+	{
+		Node* current = *list;
+		swapped = 0;
+		while (current->next != NULL) // går igenom listan
+		{
+			if (current->data > current->next->data) // byter plats
+			{
+				swap_nodes(list, current);
+				swapped = 1;
+				current = current->previous;
+			}
+			else
+				current = current->next; // om ingen swap gjordes
+		}
+	}while (swapped);
+	
 }
