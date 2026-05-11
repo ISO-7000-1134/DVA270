@@ -316,6 +316,16 @@ int is_sorted(List list)
 
 }
 
+int is_sorted_array(int array[], int size)
+{
+	for (int i = 0; i < size-1; i++)
+	{
+		if(array[i] > array[i+1])
+			return 0;
+	}
+	return 1;
+}
+
 void bubble_sort(List *list)
 {
 
