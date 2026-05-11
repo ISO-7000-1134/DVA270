@@ -277,3 +277,14 @@ int remove_element(List *list, const Data data)
 
 	remove_element_from_head(head, list, data);
 }
+
+// Lab3 del 2
+int is_sorted(const List list)
+{
+
+}
+
+void bubble_sort(List *list)
+{
+	
+}

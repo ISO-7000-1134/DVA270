@@ -84,5 +84,9 @@ int search(const List list, const Data data);
 //Ta bort data ur listan (första förekomsten), returnera 0 om datat inte finns, annars 1
 int remove_element(List *list, const Data data);
 
+// Lab3 del 2
+int is_sorted(const List list);
+void bubble_sort(List *list);
+
 
 #endif
