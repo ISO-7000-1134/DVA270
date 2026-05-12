@@ -326,27 +326,35 @@ int is_sorted_array(int array[], int size)
 	return 1;
 }
 
-void swap_nodes(List* list, Node* first)
+void swap_nodes(Node* first)
 {
-	if (first == NULL || first->next == NULL)
-		return ;
+	if (first == NULL )
+		return;
 
+	if(first->next == NULL)
+		return;
+
+	//skapa temporär pekare för nästa element (next)
 	Node* next = first->next;
+	Node* after_next = next->next;
+	Node* before_first = first->previous;
 
 	// Koppla om länkarna mellan first och next
-	first->next = next->next;
+	//sätt nästa element för (first) att vara nästa element för (next)
+	first->next = after_next;//next->next;
+	//sätt nästa element för (next) att vara (first)
 	next->next = first;
-
-	next->previous = first->previous;
+	// sätt föregående element för (next) att vara föregående element för (first)
+	next->previous = before_first;//first->previous;
+	//sätt föregående element för (first) att vara (next)
 	first->previous = next;
 
-	if (first->previous != NULL)
-		next->previous->next = next;
-	else
-		*list = next; // uppdaterar HEAD
-
-	if (first->next != NULL)
-		first->next->previous = first;
+	//sätt det nästa elementet för det föregående element för (next) (next->previous->next) till (next)
+	if (before_first != NULL)
+		before_first->next = next;
+	//sätt det föregående elementet för nästa element för (first) (first->next->previous) till (first)
+	if (after_next != NULL)
+		after_next->previous = first;
 
 }
 
@@ -355,19 +363,24 @@ void bubble_sort(List *list)
 	if (*list == NULL)
 		return;
 
-	int swapped; // antarlistan redan är sorterad
-
+	int swapped; 
+	
 	do // sorterar så länge man gjort en swap
 	{
+		swapped = 0; // antar listan redan är sorterad
 		Node* current = *list;
-		swapped = 0;
 		while (current->next != NULL) // går igenom listan
 		{
 			if (current->data > current->next->data) // byter plats
 			{
-				swap_nodes(list, current);
+				Node* temp_current = current; //  chat. sätter current till en tillfällig pekare
+				swap_nodes(current);
 				swapped = 1;
-				current = current->previous;
+
+				// chat
+				current = temp_current->previous;
+				if (current->previous == NULL)
+                    *list = current;
 			}
 			else
 				current = current->next; // om ingen swap gjordes
