@@ -11,7 +11,7 @@ int is_sorted_array(int array[], int size);
 
 void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*));
 void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*));
-void SectionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*));
+void SelectionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*));
 void InsertionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*));
 void bubble_sort(List *list);
 

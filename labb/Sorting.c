@@ -233,9 +233,9 @@ void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
     QuickSort(data + (sizeOfType * (pivot + 1)), sizeOfType, length - pivot - 1, compare);
 }
 
-/// Sorts (data) using the section sort algorythem, which consists of (length) blocks with size (sizeOfType), and uses (compare) to determine order
+/// Sorts (data) using the selection sort algorythem, which consists of (length) blocks with size (sizeOfType), and uses (compare) to determine order
     // (compare(a, b)) returns a value greater than 0 if (a) "is larger" than (b), 0 if "equal" and a value lsser than 0 if (a) is "smaller"
-void SectionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
+void SelectionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
     // Pre conditions
     if (data == NULL)
         return;
