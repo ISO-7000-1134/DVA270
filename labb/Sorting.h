@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "list.h"
 
 #ifndef SORTING_H
 #define SORTING_H
