@@ -61,6 +61,7 @@ int is_sorted_array(int array[], int size)
 	return 1;
 }
 
+// swap funktion efter pseudokoden från labb 2
 void swap_nodes(Node* first)
 {
 	if (first == NULL )
@@ -108,11 +109,10 @@ void bubble_sort(List *list)
 		{
 			if (current->data > current->next->data) // byter plats
 			{
-				Node* temp_current = current; //  chat. sätter current till en tillfällig pekare
+				Node* temp_current = current; // sätter current till en tillfällig pekare
 				swap_nodes(current);
 				swapped = 1;
 
-				// chat
 				current = temp_current->previous;
 				if (current->previous == NULL)
                     *list = current;
