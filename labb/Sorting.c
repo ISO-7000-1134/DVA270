@@ -1,4 +1,6 @@
 #include "Sorting.h"
+#include "list.h"
+#include "labb-1.h"
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
@@ -13,6 +15,115 @@ static void swap(void* a, void* b, size_t sizeOfType) {
     memcpy(b, temp, sizeOfType);
 }
 
+List random_linked_list(int size)
+{	 
+	List list = NULL;
+	for (int i = 0; i < size; i++)
+		add_last(&list, rand() % 10 + 1);
+	return list;
+}
+
+void random_array(int array[], int size)
+{ 
+	for (int i = 0; i < size; i++)
+		array[i] = rand() % 10 + 1;
+}
+
+int is_sorted_helper(List list)
+{
+	List current = list;
+
+	if (current == NULL || current->next == NULL)
+		return 1;
+	else if (current->data > current->next->data)
+		return 0;
+
+	is_sorted_helper(current->next);
+}
+
+int is_sorted(List list)
+{
+	// find head
+	while (list->previous != NULL)
+		list = list->previous;
+
+	return is_sorted_helper(list);
+
+}
+
+int is_sorted_array(int array[], int size)
+{
+	for (int i = 0; i < size-1; i++)
+	{
+		if(array[i] > array[i+1])
+			return 0;
+	}
+	return 1;
+}
+
+void swap_nodes(Node* first)
+{
+	if (first == NULL )
+		return;
+
+	if(first->next == NULL)
+		return;
+
+	//skapa temporär pekare för nästa element (next)
+	Node* next = first->next;
+	Node* after_next = next->next;
+	Node* before_first = first->previous;
+
+	// Koppla om länkarna mellan first och next
+	//sätt nästa element för (first) att vara nästa element för (next)
+	first->next = after_next;//next->next;
+	//sätt nästa element för (next) att vara (first)
+	next->next = first;
+	// sätt föregående element för (next) att vara föregående element för (first)
+	next->previous = before_first;//first->previous;
+	//sätt föregående element för (first) att vara (next)
+	first->previous = next;
+
+	//sätt det nästa elementet för det föregående element för (next) (next->previous->next) till (next)
+	if (before_first != NULL)
+		before_first->next = next;
+	//sätt det föregående elementet för nästa element för (first) (first->next->previous) till (first)
+	if (after_next != NULL)
+		after_next->previous = first;
+
+}
+
+void bubble_sort(List *list)
+{	
+	if (*list == NULL)
+		return;
+
+	int swapped; 
+	
+	do // sorterar så länge man gjort en swap
+	{
+		swapped = 0; // antar listan redan är sorterad
+		Node* current = *list;
+		while (current->next != NULL) // går igenom listan
+		{
+			if (current->data > current->next->data) // byter plats
+			{
+				Node* temp_current = current; //  chat. sätter current till en tillfällig pekare
+				swap_nodes(current);
+				swapped = 1;
+
+				// chat
+				current = temp_current->previous;
+				if (current->previous == NULL)
+                    *list = current;
+			}
+			else
+				current = current->next; // om ingen swap gjordes
+		}
+	}while (swapped);
+	
+}
+
 void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
     // handle trivial cases
     if (length <= 1)
@@ -24,8 +135,8 @@ void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
     }
 
     // Divide into sub arrays
-    // data_a = data
-    void* data_b = data + (sizeOfType * (length - (length / 2)));
+    //    data_a = data
+    void* data_b = data + (sizeOfType * (length / 2));
     
     // Sort sub arrays
     MergeSort(data, sizeOfType, length / 2, compare);
