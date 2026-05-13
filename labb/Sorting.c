@@ -73,7 +73,7 @@ void InsertionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(
 
 // ---------------------------------------------------------
 
-RadixList ArrayToRadixList(int data[], size_t length) {
+RadixList ArrayToRadixList(int32_t data[], size_t length) {
     RadixList list = NULL;
 
     RadixNode* currentNodePtr;
@@ -114,7 +114,19 @@ static void radixHash(int32_t num, int itteration) {
 void RadixSort(RadixList* data) {
     RadixList ht_a[16];
     RadixList ht_b[16];
-    RadixList workingPtr[16];
+    RadixList* workingPtr[16];
 
-    
+    int j, index;
+    RadixNode* currentNodePtr = data;
+    for(int i = 0; i < 4; i++) {
+        for(j = 0; j < 16; j++) 
+            *(workingPtr[j]) = &(ht_a[j]);
+
+        while (current != NULL) {
+            *workingPtr[]
+        }
+            
+        for(j = 0; j < 16; j++) 
+            *(workingPtr[j]) = &(ht_b[j]);
+    }
 }
