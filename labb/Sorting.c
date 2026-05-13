@@ -126,7 +126,6 @@ void bubble_sort(List *list)
 
 void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
     // Handle trivial cases
-
     if (length <= 1)
         return;
     if (length == 2) {
@@ -171,16 +170,38 @@ void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
     free(data_a);
 }
 
-void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
-    if (length <= 1) 
-        return;
+static void shuffle(void* a, void* b, void* c, size_t sizeOfType) {
+    void* temp = malloc(sizeOfType);
+    assert(temp != NULL);
 
-    // Sort povot element into array
-    void* pivot = data + (sizeOfType * (length - 1));
-    for (size_t i = 0; i < length - 1; i++) 
-        // Compare data at pivot to the data after
-        if (compare(data + (sizeOfType * pivot), data + (sizeOfType * (pivot + 1))) > 0) 
-            swap(data + (sizeOfType * pivot), data + (sizeOfType * (pivot + 1)), sizeOfType);
+    memcpy(temp, a, sizeOfType);
+    memcpy(a, b, sizeOfType);
+    memcpy(b, c, sizeOfType);
+    memcpy(c, temp, sizeOfType);
+}
+void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
+    // Handle trivial cases
+    if (length <= 1)
+        return;
+    if (length == 2) {
+        if (compare(data, data + sizeOfType) > 0) 
+            swap(data, data + sizeOfType, sizeOfType);
+        return; 
+    }
+
+    // Sort pivot element into array
+    size_t pivot = 0;
+    for (; pivot < length; pivot++) {
+        // Find the last element smaller than pivot 
+        size_t i = length - 1;
+        for(; i >= pivot + 1; i--) 
+            if (compare(data + (sizeOfType * pivot), data + (sizeOfType * (i))) > 0) 
+                break;
+        if (i == pivot)
+            break;
+        else
+            shuffle(data + (sizeOfType * i), data + (sizeOfType * (pivot + 1)), data + (sizeOfType * pivot), sizeOfType);
+    }
 
     // Sort sub arrays
     QuickSort(data, sizeOfType, pivot, compare);
