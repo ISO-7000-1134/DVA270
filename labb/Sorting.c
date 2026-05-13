@@ -1,5 +1,6 @@
 #include "Sorting.h"
 #include <stdlib.h>
+#include <stdint.h>
 
 static void swap(void* a, void* b) {
     void temp = *a;
@@ -89,13 +90,13 @@ RadixList ArrayToRadixList(int data[], size_t length) {
     return list;
 }
 
-int* ArrayToRadixList(RadixList data, size_t* lengthPtr) {
+int32_t* ArrayToRadixList(RadixList data, size_t* lengthPtr) {
     size_t length = 0;
-    int* array = NULL;
+    int32_t* array = NULL;
 
     RadixNode* currentNodePtr = data;
     while (currentNodePtr != NULL) {
-        realloc(array, sizeof(int) * (length + 1));
+        realloc(array, sizeof(int32_t) * (length + 1));
         array[length] = currentNodePtr->data;
         length++;
     }
@@ -103,8 +104,17 @@ int* ArrayToRadixList(RadixList data, size_t* lengthPtr) {
     return array;
 }
 
-void RadixSort(RadixList* data) {
-    // Convert int to uint
+static void radixHash(int32_t num, int itteration) {
+    // Convert int to uint by making -1 ... -(0x7fffffff) into 0 to 0x7fffffff and 0 - 0x7fffffff into 0x80000000 - 0xffffffff
+    int u_num = num + 0x80000000;
 
-    // 
+    // Apply hash
+    return (u_num & (0xf0000000 >> itteration)) >> (7 - itteration);
+}
+void RadixSort(RadixList* data) {
+    RadixList ht_a[16];
+    RadixList ht_b[16];
+    RadixList workingPtr[16];
+
+    
 }
