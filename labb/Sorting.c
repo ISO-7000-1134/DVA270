@@ -9,7 +9,14 @@ static void swap(void* a, void* b) {
 }
 
 void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void a, void b)) {
-    if (length == 1) return;
+    // handle trivial cases
+    if (length <= 1)
+        return;
+    if (length == 2) {
+        if (compare(*data, *(data + sizeOfType)) < 0) 
+            swap(data, data + sizeOfType);
+        return; 
+    }
 
     // Divide into sub arrays
     // data_a = data
