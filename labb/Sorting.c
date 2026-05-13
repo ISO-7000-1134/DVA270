@@ -1,20 +1,25 @@
 #include "Sorting.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
+#include <string.h>
 
-static void swap(void* a, void* b) {
-    void temp = *a;
-    *a = *b;
-    *b = temp;
+static void swap(void* a, void* b, size_t sizeOfType) {
+    void* temp = malloc(sizeOfType);
+    assert(temp != NULL);
+
+    memcpy(temp, a, sizeOfType);
+    memcpy(a, b, sizeOfType);
+    memcpy(b, temp, sizeOfType);
 }
 
-void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void a, void b)) {
+void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
     // handle trivial cases
     if (length <= 1)
         return;
     if (length == 2) {
-        if (compare(*data, *(data + sizeOfType)) < 0) 
-            swap(data, data + sizeOfType);
+        if (compare(data, data + sizeOfType) > 0) 
+            swap(data, data + sizeOfType, sizeOfType);
         return; 
     }
 
@@ -28,23 +33,23 @@ void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
 
     // Combine sub arrays
     for (size_t i = 0; i < length - 1; i++) {
-        if (compare(*data, *data_b) < 0) {
-            swap(data, data_b);
+        if (compare(data, data_b) > 0) {
+            swap(data, data_b, sizeOfType);
             data += sizeOfType;
         } else 
             data_b += sizeOfType;
     } 
 }
 
-void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void a, void b)) {
-    if (length == 1) 
+void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
+    if (length <= 1) 
         return;
 
     // Sort povot element into array
     size_t pivot = 0;
     for (; pivot < length - 1; pivot++) {
-        if (compare(*(data + (sizeOfType * pivot)), *(data + (sizeOfType * (pivot + 1)))) > 0) 
-            swap(data + (sizeOfType * pivot), data + (sizeOfType * (pivot + 1)));
+        if (compare(data + (sizeOfType * pivot), data + (sizeOfType * (pivot + 1))) > 0) 
+            swap(data + (sizeOfType * pivot), data + (sizeOfType * (pivot + 1)), sizeOfType);
         else 
             break;
     } 
@@ -54,24 +59,25 @@ void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
     QuickSort(data + (sizeOfType * (pivot + 1)), sizeOfType, length - pivot - 1, compare);
 }
 
-void SectionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void a, void b)) {
+void SectionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
     void* min;
     for (size_t i = 0; i < length; i++) {
+        min = data + (sizeOfType * i);
         for (size_t j = i; j < length; j++) {
             // Compare current data to the data before
-            if (compare(*min, *(data + (sizeOfType * (j - 1)))) > 0)
-                min = data + (sizeOfType * (j - 1));
+            if (compare(min, data + (sizeOfType * j)) > 0)
+                min = data + (sizeOfType * j);
         }
-        swap(data + (sizeOfType * i), min);
+        swap(data + (sizeOfType * i), min, sizeOfType);
     }
 }
 
-void InsertionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void a, void b)) {
+void InsertionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
     for (size_t i = 0; i < length - 1; i++) {
         for (size_t j = i + 1; j > 0; j--) {
             // Compare current data to the data after
-            if (compare(*(data + (sizeOfType * j)), *(data + (sizeOfType * (j - 1)))) > 0)
-                swap(data + (sizeOfType * j), data + (sizeOfType * (j - 1)));
+            if (compare(data + (sizeOfType * j), data + (sizeOfType * (j - 1))) < 0)
+                swap(data + (sizeOfType * j), data + (sizeOfType * (j - 1)), sizeOfType);
             else 
                 break;
         }
@@ -97,21 +103,18 @@ RadixList ArrayToRadixList(int32_t data[], size_t length) {
     return list;
 }
 
-int32_t* RadixListToArray(RadixList data, size_t* lengthPtr) {
-    size_t length = 0;
-    int32_t* array = NULL;
-
+// Returns used length
+size_t RadixListToArray(RadixList data, int32_t array[], size_t length) {
+    size_t len = 0;
+    
     RadixNode* currentNodePtr = data;
-    while (currentNodePtr != NULL) {
-        realloc(array, sizeof(int32_t) * (length + 1));
-        array[length] = currentNodePtr->data;
-        length++;
-    }
+    while (currentNodePtr != NULL && len < length) 
+        array[len++] = currentNodePtr->data;
 
-    return array;
+    return len;
 }
 
-static void radixHash(int32_t num, int itteration) {
+static int radixHash(int32_t num, int itteration) {
     // Convert int to uint by maping -1 ... -(0x7fffffff) onto 0 ... 0x7fffffff and 0 ... 0x7fffffff into 0x80000000 ... 0xffffffff
     int u_num = num + 0x80000000;
 
@@ -126,13 +129,15 @@ void RadixSort(RadixList* data) {
     int i, j;
     // Init working pointers
     for(int i = 0; i < 16; i++) 
-        workingNextPtr[j] = &(ht[j]);
+        workingNextPtr[i] = &(ht[i]);
 
+    int index;
     RadixNode* currentNodePtr = *data;
     for(i = 0; i < 8; i++) {
         // Sort data into hash table (buckets)
         while (currentNodePtr != NULL) {
-            *(workingNextPtr[radixHash(currentNodePtr->data, i * 2)]) = currentNodePtr;
+            index = radixHash(currentNodePtr->data, i * 2);
+            *(workingNextPtr[index]) = currentNodePtr;
             workingNextPtr[index] = &(currentNodePtr->next);
         }
             
@@ -142,6 +147,7 @@ void RadixSort(RadixList* data) {
             *(workingNextPtr[j]) = ht[j + 1];
             workingNextPtr[j] = &(ht[j]);
         }
+        *(workingNextPtr[15]) = NULL;
         workingNextPtr[15] = &(ht[15]);
     }
 }
