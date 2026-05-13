@@ -90,7 +90,7 @@ RadixList ArrayToRadixList(int32_t data[], size_t length) {
     return list;
 }
 
-int32_t* ArrayToRadixList(RadixList data, size_t* lengthPtr) {
+int32_t* RadixListToArray(RadixList data, size_t* lengthPtr) {
     size_t length = 0;
     int32_t* array = NULL;
 
@@ -122,8 +122,10 @@ void RadixSort(RadixList* data) {
         for(j = 0; j < 16; j++) 
             *(workingPtr[j]) = &(ht_a[j]);
 
-        while (current != NULL) {
-            *workingPtr[]
+        while (currentNodePtr != NULL) {
+            index = radixHash(currentNodePtr->data, i * 2);
+            *(workingPtr[index]) = currentNodePtr;
+            workingPtr[index] = &(currentNodePtr->next);
         }
             
         for(j = 0; j < 16; j++) 
