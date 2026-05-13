@@ -112,23 +112,25 @@ static void radixHash(int32_t num, int itteration) {
     return (u_num & (0xf0000000 >> itteration)) >> (7 - itteration);
 }
 void RadixSort(RadixList* data) {
-    RadixList ht_a[16];
-    RadixList ht_b[16];
-    RadixList* workingPtr[16];
+    RadixList ht[16];
+    RadixList* workingNextPtr[16];
 
-    int j, index;
-    RadixNode* currentNodePtr = data;
-    for(int i = 0; i < 4; i++) {
-        for(j = 0; j < 16; j++) 
-            *(workingPtr[j]) = &(ht_a[j]);
+    int i, j;
+    for(int i = 0; i < 16; i++) 
+        workingNextPtr[j] = &(ht[j]);
 
+    RadixNode* currentNodePtr = *data;
+    for(i = 0; i < 8; i++) {
         while (currentNodePtr != NULL) {
-            index = radixHash(currentNodePtr->data, i * 2);
-            *(workingPtr[index]) = currentNodePtr;
-            workingPtr[index] = &(currentNodePtr->next);
+            *(workingNextPtr[radixHash(currentNodePtr->data, i * 2)]) = currentNodePtr;
+            workingNextPtr[index] = &(currentNodePtr->next);
         }
             
-        for(j = 0; j < 16; j++) 
-            *(workingPtr[j]) = &(ht_b[j]);
+        currentNodePtr = ht[0];
+        for(j = 0; j < 15; j++) { 
+            *(workingNextPtr[j]) = ht[j + 1];
+            workingNextPtr[j] = &(ht[j]);
+        }
+        workingNextPtr[15] = &(ht[15]);
     }
 }
