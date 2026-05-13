@@ -125,7 +125,8 @@ void bubble_sort(List *list)
 }
 
 void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
-    // handle trivial cases
+    // Handle trivial cases
+
     if (length <= 1)
         return;
     if (length == 2) {
@@ -142,14 +143,32 @@ void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
     MergeSort(data, sizeOfType, length / 2, compare);
     MergeSort(data_b, sizeOfType, length - (length / 2), compare);
 
-    // Combine sub arrays
-    for (size_t i = 0; i < length - 1; i++) {
-        if (compare(data, data_b) > 0) {
-            swap(data, data_b, sizeOfType);
-            data += sizeOfType;
-        } else 
+    // Merge sub arrays
+    void* data_a = malloc(sizeOfType * (length / 2)); // Copy of data_a in separate memory
+    assert(data != NULL);
+    memcpy(data_a, data, sizeOfType * (length / 2));
+    void* data_a_ptr = data_a;
+
+    size_t i = 0;
+    for (; i < length; i++) {
+        if (compare(data_a_ptr, data_b) > 0) {
+            memcpy(data + (sizeOfType * i), data_b, sizeOfType);
             data_b += sizeOfType;
+        } else {
+            memcpy(data + (sizeOfType * i), data_a_ptr, sizeOfType);
+            data_a_ptr += sizeOfType;
+        }
+
+        // Stop merging if data_a or data_b buffer is empty
+        if(data_a_ptr >= data_a + sizeOfType * (length / 2)) {
+            break;
+        } 
+        if(data_b > data + (sizeOfType * length)) {
+            memcpy(data + (sizeOfType * i), data_a_ptr, data_a + sizeOfType * (length / 2) - data_a_ptr); // Copy rest of data_a into data
+            break;
+        }
     } 
+    free(data_a);
 }
 
 void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
@@ -157,13 +176,11 @@ void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
         return;
 
     // Sort povot element into array
-    size_t pivot = 0;
-    for (; pivot < length - 1; pivot++) {
+    void* pivot = data + (sizeOfType * (length - 1));
+    for (size_t i = 0; i < length - 1; i++) 
+        // Compare data at pivot to the data after
         if (compare(data + (sizeOfType * pivot), data + (sizeOfType * (pivot + 1))) > 0) 
             swap(data + (sizeOfType * pivot), data + (sizeOfType * (pivot + 1)), sizeOfType);
-        else 
-            break;
-    } 
 
     // Sort sub arrays
     QuickSort(data, sizeOfType, pivot, compare);
@@ -227,7 +244,7 @@ size_t RadixListToArray(RadixList data, int32_t array[], size_t length) {
 
 static int radixHash(int32_t num, int itteration) {
     // Convert int to uint by maping -1 ... -(0x7fffffff) onto 0 ... 0x7fffffff and 0 ... 0x7fffffff into 0x80000000 ... 0xffffffff
-    int u_num = num + 0x80000000;
+    uint32_t u_num = num ^ 0x80000000;
 
     // Apply hash
         // use the n'th nibble for the n'th itteration
@@ -235,11 +252,11 @@ static int radixHash(int32_t num, int itteration) {
 }
 void RadixSort(RadixList* data) {
     RadixList ht[16]; // heads
-    RadixList* workingNextPtr[16]; // tails
+    RadixNode** workingNextPtr[16]; // tails
 
     int i, j;
     // Init working pointers
-    for(int i = 0; i < 16; i++) 
+    for(i = 0; i < 16; i++) 
         workingNextPtr[i] = &(ht[i]);
 
     int index;
@@ -247,18 +264,18 @@ void RadixSort(RadixList* data) {
     for(i = 0; i < 8; i++) {
         // Sort data into hash table (buckets)
         while (currentNodePtr != NULL) {
-            index = radixHash(currentNodePtr->data, i * 2);
+            index = radixHash(currentNodePtr->data, i);
             *(workingNextPtr[index]) = currentNodePtr;
             workingNextPtr[index] = &(currentNodePtr->next);
         }
             
         // Link hash tables into one list and reset working next pointers to point at the hash
-        currentNodePtr = ht[0];
+        currentNodePtr = ht[0]; // Make first node head
         for(j = 0; j < 15; j++) { 
             *(workingNextPtr[j]) = ht[j + 1];
             workingNextPtr[j] = &(ht[j]);
         }
-        *(workingNextPtr[15]) = NULL;
+        *(workingNextPtr[15]) = NULL; // Make last node tail
         workingNextPtr[15] = &(ht[15]);
     }
 }
