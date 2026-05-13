@@ -105,27 +105,31 @@ int32_t* RadixListToArray(RadixList data, size_t* lengthPtr) {
 }
 
 static void radixHash(int32_t num, int itteration) {
-    // Convert int to uint by making -1 ... -(0x7fffffff) into 0 to 0x7fffffff and 0 - 0x7fffffff into 0x80000000 - 0xffffffff
+    // Convert int to uint by maping -1 ... -(0x7fffffff) onto 0 ... 0x7fffffff and 0 ... 0x7fffffff into 0x80000000 ... 0xffffffff
     int u_num = num + 0x80000000;
 
     // Apply hash
+        // use the n'th nibble for the n'th itteration
     return (u_num & (0xf0000000 >> itteration)) >> (7 - itteration);
 }
 void RadixSort(RadixList* data) {
-    RadixList ht[16];
-    RadixList* workingNextPtr[16];
+    RadixList ht[16]; // heads
+    RadixList* workingNextPtr[16]; // tails
 
     int i, j;
+    // Init working pointers
     for(int i = 0; i < 16; i++) 
         workingNextPtr[j] = &(ht[j]);
 
     RadixNode* currentNodePtr = *data;
     for(i = 0; i < 8; i++) {
+        // Sort data into hash table (buckets)
         while (currentNodePtr != NULL) {
             *(workingNextPtr[radixHash(currentNodePtr->data, i * 2)]) = currentNodePtr;
             workingNextPtr[index] = &(currentNodePtr->next);
         }
             
+        // Link hash tables into one list and reset working next pointers to point at the hash
         currentNodePtr = ht[0];
         for(j = 0; j < 15; j++) { 
             *(workingNextPtr[j]) = ht[j + 1];
