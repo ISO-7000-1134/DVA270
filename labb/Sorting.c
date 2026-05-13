@@ -159,9 +159,8 @@ void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
         }
 
         // Stop merging if data_a or data_b buffer is empty
-        if(data_a_ptr >= data_a + sizeOfType * (length / 2)) {
+        if(data_a_ptr >= data_a + sizeOfType * (length / 2))
             break;
-        } 
         if(data_b > data + (sizeOfType * length)) {
             memcpy(data + (sizeOfType * i), data_a_ptr, data_a + sizeOfType * (length / 2) - data_a_ptr); // Copy rest of data_a into data
             break;
@@ -248,6 +247,7 @@ RadixList ArrayToRadixList(int32_t data[], size_t length) {
         previousNextPtr = &(currentNodePtr->next);
         currentNodePtr = currentNodePtr->next;
     }
+    *previousNextPtr = NULL;
 
     return list;
 }
@@ -257,19 +257,21 @@ size_t RadixListToArray(RadixList data, int32_t array[], size_t length) {
     size_t len = 0;
     
     RadixNode* currentNodePtr = data;
-    while (currentNodePtr != NULL && len < length) 
+    while (currentNodePtr != NULL && len < length) {
         array[len++] = currentNodePtr->data;
+        currentNodePtr = currentNodePtr->next;
+    }
 
     return len;
 }
 
 static int radixHash(int32_t num, int itteration) {
-    // Convert int to uint by maping -1 ... -(0x7fffffff) onto 0 ... 0x7fffffff and 0 ... 0x7fffffff into 0x80000000 ... 0xffffffff
+    // Convert int to uint by maping -1 ... -(0x7fffffff) onto 0x7fffffff ... 0 and 0 ... 0x7fffffff into 0x80000000 ... 0xffffffff
     uint32_t u_num = num ^ 0x80000000;
 
     // Apply hash
         // use the n'th nibble for the n'th itteration
-    return (u_num & (0xf0000000 >> itteration)) >> (7 - itteration);
+    return (u_num & (0xf0000000 >> (4 * itteration))) >> (4 * (7 - itteration));
 }
 void RadixSort(RadixList* data) {
     RadixList ht[16]; // heads
@@ -277,26 +279,44 @@ void RadixSort(RadixList* data) {
 
     int i, j;
     // Init working pointers
-    for(i = 0; i < 16; i++) 
+    for(i = 0; i < 16; i++) {
         workingNextPtr[i] = &(ht[i]);
+        ht[i] = NULL;
+    }
 
     int index;
     RadixNode* currentNodePtr = *data;
+    RadixNode* tailPtr;
+    char str2[] = "\n\r";
     for(i = 0; i < 8; i++) {
         // Sort data into hash table (buckets)
         while (currentNodePtr != NULL) {
             index = radixHash(currentNodePtr->data, i);
             *(workingNextPtr[index]) = currentNodePtr;
+            
             workingNextPtr[index] = &(currentNodePtr->next);
+            currentNodePtr = currentNodePtr->next;
         }
             
-        // Link hash tables into one list and reset working next pointers to point at the hash
-        currentNodePtr = ht[0]; // Make first node head
-        for(j = 0; j < 15; j++) { 
-            *(workingNextPtr[j]) = ht[j + 1];
+        // Link hash table into one list
+            // Find head 
+        currentNodePtr = NULL;
+        for(j = 0; currentNodePtr == NULL; j++)
+            currentNodePtr = ht[j];
+        workingNextPtr[0] = workingNextPtr[j - 1]; // use index 0 as dummy register
+        for(; j < 16; j++) 
+            // Link to next hash table if not empty
+            if (ht[j] != NULL) {
+                *(workingNextPtr[0]) = ht[j];
+                workingNextPtr[0] = workingNextPtr[j];
+            }
+        *(workingNextPtr[0]) = NULL; // Define tail
+
+        // Reset working pointers
+        for(j = 0; j < 16; j++) {
             workingNextPtr[j] = &(ht[j]);
+            ht[j] = NULL;
         }
-        *(workingNextPtr[15]) = NULL; // Make last node tail
-        workingNextPtr[15] = &(ht[15]);
     }
+    *data = currentNodePtr;
 }
