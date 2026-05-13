@@ -23,7 +23,7 @@ typedef struct radixNode
 typedef RadixNode* RadixList;
 
 RadixList ArrayToRadixList(int32_t data[], size_t length);
-size_t RadixListToArray(RadixList data, int32_t array[], size_t length);
+size_t RadixListToArray(const RadixList data, int32_t array[], size_t length);
 
 void RadixSort(RadixList* data);
 

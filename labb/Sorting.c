@@ -6,15 +6,6 @@
 #include <assert.h>
 #include <string.h>
 
-static void swap(void* a, void* b, size_t sizeOfType) {
-    void* temp = malloc(sizeOfType);
-    assert(temp != NULL);
-
-    memcpy(temp, a, sizeOfType);
-    memcpy(a, b, sizeOfType);
-    memcpy(b, temp, sizeOfType);
-}
-
 List random_linked_list(int size)
 {	 
 	List list = NULL;
@@ -124,7 +115,27 @@ void bubble_sort(List *list)
 	
 }
 
+/// Swaps two blocks of data of size (sizeOfType) at the pointers (a) and (b)
+static void swap(void* a, void* b, size_t sizeOfType) {
+    void* temp = malloc(sizeOfType);
+    assert(temp != NULL);
+
+    memcpy(temp, a, sizeOfType);
+    memcpy(a, b, sizeOfType);
+    memcpy(b, temp, sizeOfType);
+}
+
+/// Recursivly sorts (data) using the merge sort algorythem, which consists of (length) blocks with size (sizeOfType), and uses (compare) to determine order
+    // (compare(a, b)) returns a value greater than 0 if (a) "is larger" than (b), 0 if "equal" and a value lsser than 0 if (a) is "smaller"
 void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
+    // Pre conditions
+    if (data == NULL)
+        return;
+    if (sizeOfType == 0)
+        return;
+    if (compare == NULL)
+        return;
+
     // Handle trivial cases
     if (length <= 1)
         return;
@@ -169,6 +180,9 @@ void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
     free(data_a);
 }
 
+/// Shuffles three blocks of data of size (sizeOfType) at the pointers (a), (b) and (c)
+    // a <- b <- c
+    // |_________^
 static void shuffle(void* a, void* b, void* c, size_t sizeOfType) {
     void* temp = malloc(sizeOfType);
     assert(temp != NULL);
@@ -178,7 +192,17 @@ static void shuffle(void* a, void* b, void* c, size_t sizeOfType) {
     memcpy(b, c, sizeOfType);
     memcpy(c, temp, sizeOfType);
 }
+/// Recursivly sorts (data) using the quick sort algorythem, which consists of (length) blocks with size (sizeOfType), and uses (compare) to determine order
+    // (compare(a, b)) returns a value greater than 0 if (a) "is larger" than (b), 0 if "equal" and a value lsser than 0 if (a) is "smaller"
 void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
+    // Pre conditions
+    if (data == NULL)
+        return;
+    if (sizeOfType == 0)
+        return;
+    if (compare == NULL)
+        return;
+
     // Handle trivial cases
     if (length <= 1)
         return;
@@ -188,8 +212,10 @@ void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
         return; 
     }
 
-    // Sort pivot element into array
+    // Chose pivot element as the first element
     size_t pivot = 0;
+
+    // Sort pivot element into array
     for (; pivot < length; pivot++) {
         // Find the last element smaller than pivot 
         size_t i = length - 1;
@@ -207,7 +233,19 @@ void QuickSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
     QuickSort(data + (sizeOfType * (pivot + 1)), sizeOfType, length - pivot - 1, compare);
 }
 
+/// Sorts (data) using the section sort algorythem, which consists of (length) blocks with size (sizeOfType), and uses (compare) to determine order
+    // (compare(a, b)) returns a value greater than 0 if (a) "is larger" than (b), 0 if "equal" and a value lsser than 0 if (a) is "smaller"
 void SectionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
+    // Pre conditions
+    if (data == NULL)
+        return;
+    if (sizeOfType == 0)
+        return;
+    if (compare == NULL)
+        return;
+    if (length <= 1)
+        return;
+
     void* min;
     for (size_t i = 0; i < length; i++) {
         min = data + (sizeOfType * i);
@@ -220,7 +258,19 @@ void SectionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(vo
     }
 }
 
+/// Sorts (data) using the insertion sort algorythem, which consists of (length) blocks with size (sizeOfType), and uses (compare) to determine order
+    // (compare(a, b)) returns a value greater than 0 if (a) "is larger" than (b), 0 if "equal" and a value lsser than 0 if (a) is "smaller"
 void InsertionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void*, void*)) {
+    // Pre conditions
+    if (data == NULL)
+        return;
+    if (sizeOfType == 0)
+        return;
+    if (compare == NULL)
+        return;
+    if (length <= 1)
+        return;
+
     for (size_t i = 0; i < length - 1; i++) {
         for (size_t j = i + 1; j > 0; j--) {
             // Compare current data to the data after
@@ -234,7 +284,15 @@ void InsertionSort(void* data, size_t sizeOfType, size_t length, int (*compare)(
 
 // ---------------------------------------------------------
 
+/// Convert an array (data) of length (length) to a linked list (RadixList)
+    // Returns the list
 RadixList ArrayToRadixList(int32_t data[], size_t length) {
+    // Pre conditions
+    if (data == NULL)
+        return NULL;
+    if (length == 0)
+        return NULL;
+
     RadixList list = NULL;
 
     RadixNode* currentNodePtr;
@@ -252,8 +310,17 @@ RadixList ArrayToRadixList(int32_t data[], size_t length) {
     return list;
 }
 
-// Returns used length
-size_t RadixListToArray(RadixList data, int32_t array[], size_t length) {
+/// Convert a RadixList (data) to an array (array) of maximum length (length)
+    // Returns used length
+size_t RadixListToArray(const RadixList data, int32_t array[], size_t length) {
+    // Pre conditions
+    if (data == NULL)
+        return 0;
+    if (array == NULL)
+        return 0;
+    if (length == 0)
+        return 0;
+
     size_t len = 0;
     
     RadixNode* currentNodePtr = data;
@@ -265,15 +332,22 @@ size_t RadixListToArray(RadixList data, int32_t array[], size_t length) {
     return len;
 }
 
-static int radixHash(int32_t num, int itteration) {
+/// Convert (data) and the itteration of the radix sort algorythm (iteration) to an index for the hash table in the radix sort algorythem
+    // returns the index
+static int radixHash(int32_t data, int itteration) {
     // Convert int to uint by maping -1 ... -(0x7fffffff) onto 0x7fffffff ... 0 and 0 ... 0x7fffffff into 0x80000000 ... 0xffffffff
-    uint32_t u_num = num ^ 0x80000000;
+    uint32_t u_data = data ^ 0x80000000;
 
     // Apply hash
         // use the n'th nibble for the n'th itteration
-    return (u_num & (0xf0000000 >> (4 * itteration))) >> (4 * (7 - itteration));
+    return (u_data & (0xf0000000 >> (4 * itteration))) >> (4 * (7 - itteration));
 }
+/// Sort a RadixList (data) using the radix sort algorythm
 void RadixSort(RadixList* data) {
+    // Pre conditions
+    if (data == NULL)
+        return;
+
     RadixList ht[16]; // heads
     RadixNode** workingNextPtr[16]; // tails
 
@@ -287,7 +361,6 @@ void RadixSort(RadixList* data) {
     int index;
     RadixNode* currentNodePtr = *data;
     RadixNode* tailPtr;
-    char str2[] = "\n\r";
     for(i = 0; i < 8; i++) {
         // Sort data into hash table (buckets)
         while (currentNodePtr != NULL) {
@@ -318,5 +391,7 @@ void RadixSort(RadixList* data) {
             ht[j] = NULL;
         }
     }
+
+    // Set list refrence to head
     *data = currentNodePtr;
 }
