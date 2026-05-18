@@ -105,6 +105,7 @@ void bubble_sort(List *list)
 				swapped = 1;
 
 				current = temp_current->previous;
+                // om current blir den första moden (head) uppdaterar vi list
 				if (current->previous == NULL)
                     *list = current;
 			}
