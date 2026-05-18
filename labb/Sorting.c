@@ -156,7 +156,7 @@ void MergeSort(void* data, size_t sizeOfType, size_t length, int (*compare)(void
 
     // Merge sub arrays
     void* data_a = malloc(sizeOfType * (length / 2)); // Copy of data_a in separate memory
-    assert(data != NULL);
+    assert(data_a != NULL);
     memcpy(data_a, data, sizeOfType * (length / 2));
     void* data_a_ptr = data_a;
 
